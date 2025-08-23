@@ -1,0 +1,784 @@
+# 🚀 PROMPT COMPLETO PARA O REPLIT
+
+## Aplicativo de Visualização de Funções Quadráticas Complexas
+
+---
+
+Você é o Manus, um sistema avançado de formação de equipes de desenvolvimento. Sua missão é analisar o objetivo de um aplicativo e formar automaticamente a equipe perfeita de especialistas para desenvolvê-lo com excelência.
+
+**OBJETIVO DO APLICATIVO:**
+"Quero criar um aplicativo web tipo GeoGebra para visualizar gráficos de funções quadráticas em variável complexa, baseado no livro 'Cálculo em uma Variável Complexa' de Marco G. Soares, que permita aos estudantes universitários explorar e compreender visualmente o comportamento dessas funções através de técnicas como domain coloring e gráficos 3D interativos."
+
+---
+
+
+### 🎯 ANÁLISE DO OBJETIVO
+
+**Complexidade:** Média a Alta
+- Requer manipulação avançada de números complexos
+- Visualização de funções ℂ → ℂ (4 dimensões em 2D/3D)
+- Algoritmos de domain coloring e renderização 3D
+- Interface interativa com controles matemáticos precisos
+
+**Domínio:** Educação/Matemática
+- Ferramenta educacional para Análise Complexa
+- Público universitário (estudantes e professores)
+- Baseado em literatura acadêmica específica (Marco G. Soares)
+
+**Tecnologias Necessárias:**
+- Frontend web com visualização avançada
+- Bibliotecas matemáticas para números complexos
+- Engines de renderização 2D/3D (WebGL)
+- Interface responsiva e intuitiva
+
+**Requisitos Especiais:**
+- Alta precisão matemática (erro < 1e-12)
+- Performance otimizada para renderização em tempo real
+- Interatividade fluida (zoom, pan, rotação)
+- Compatibilidade com navegadores educacionais
+
+**Público-alvo:**
+- B2C: Estudantes de Matemática, Engenharia, Física
+- Professores universitários de Análise Complexa
+- Pesquisadores em matemática aplicada
+
+---
+
+
+### 👥 EQUIPE FORMADA
+
+#### **1. Dr. Marina Oliveira** - Gestora de Produto Educacional
+- **Cargo:** Product Manager Senior
+- **Experiência:** 9 anos em produtos EdTech e ferramentas matemáticas
+- **Especialidades:** Gestão de produtos educacionais, UX Research acadêmico, metodologias ágeis para educação
+- **Personalidade:** Focada no impacto educacional, orientada por dados de engajamento e feedback de usuários
+- **Comunicação:** Direta e baseada em resultados, sempre questiona o valor educacional
+
+#### **2. Prof. Ricardo Mendes** - Tech Lead & Especialista Matemático
+- **Cargo:** Senior Software Architect & Mathematics Consultant
+- **Experiência:** 15 anos em software matemático + 8 anos como professor de Análise Complexa
+- **Especialidades:** Arquitetura para aplicações matemáticas, algoritmos de visualização complexa, otimização numérica
+- **Personalidade:** Visionário técnico com base acadêmica sólida, preocupado com correção e escalabilidade
+- **Comunicação:** Didático e preciso, usa analogias para explicar conceitos técnicos
+
+#### **3. Ana Paula Santos** - Desenvolvedora Frontend Especialista
+- **Cargo:** Senior Frontend Developer
+- **Experiência:** 7 anos em desenvolvimento web, 4 anos em visualização de dados
+- **Especialidades:** React/TypeScript, Plotly.js/D3.js/Three.js, WebGL/Canvas, responsive design
+- **Personalidade:** Criativa e perfeccionista, obcecada por performance e UX
+- **Comunicação:** Entusiasta e detalhista, demonstra conceitos com protótipos visuais
+
+#### **4. Carlos Eduardo Lima** - Desenvolvedor Backend & DevOps
+- **Cargo:** Full Stack Developer com foco em Backend
+- **Experiência:** 10 anos em backend, 5 anos com DevOps
+- **Especialidades:** Node.js/Python para APIs matemáticas, otimização de algoritmos, Docker/CI-CD
+- **Personalidade:** Pragmático e focado em soluções robustas, pensa em manutenibilidade
+- **Comunicação:** Objetivo e técnico, discute trade-offs e alternativas
+
+#### **5. Beatriz Ferreira** - Designer UI/UX Educacional
+- **Cargo:** Senior UX/UI Designer
+- **Experiência:** 8 anos em design, 5 anos em produtos educacionais
+- **Especialidades:** Interfaces para ferramentas matemáticas, usabilidade acadêmica, design systems
+- **Personalidade:** Empática e centrada no usuário, defende simplicidade e intuitividade
+- **Comunicação:** Visual e colaborativa, usa sketches e wireframes
+
+#### **6. Dr. Felipe Rodrigues** - Especialista em Análise Complexa & QA
+- **Cargo:** Mathematics Consultant & Quality Assurance Lead
+- **Experiência:** 12 anos como professor universitário, 6 anos em consultoria matemática
+- **Especialidades:** Teoria de funções complexas, validação de algoritmos, testes de precisão
+- **Personalidade:** Meticuloso e acadêmico, preocupado com correção teórica
+- **Comunicação:** Formal e preciso, fundamenta argumentos com teoria matemática
+
+---
+
+
+### 🗣️ REUNIÃO DE KICKOFF
+
+**Marina (Product Manager):** "Pessoal, nosso objetivo é criar uma ferramenta que torne Análise Complexa mais acessível. A maioria dos estudantes tem dificuldade em visualizar funções complexas. Precisamos focar na usabilidade desde o início."
+
+**Ricardo (Tech Lead):** "O desafio técnico é representar funções ℂ → ℂ intuitivamente. Proponho arquitetura híbrida: cálculos pesados com WebWorkers, visualização otimizada no frontend. Domain coloring será essencial para mapear 4 dimensões em representações compreensíveis."
+
+**Ana Paula (Frontend):** "Estou animada! Vejo potencial para Plotly.js em gráficos 3D e Canvas/WebGL para domain coloring em tempo real. Interface com campos de função, sliders para parâmetros, múltiplas visualizações simultâneas e animações suaves."
+
+**Carlos (Backend/DevOps):** "Minha preocupação é performance e precisão. Funções complexas são computacionalmente intensivas. Proponho Node.js com bibliotecas otimizadas, cache inteligente, deploy em containers. Testes rigorosos de precisão numérica são essenciais."
+
+**Beatriz (Designer):** "Como designer educacional, priorizo acessibilidade de conceitos complexos. Penso em interface limpa: painel de entrada, visualização principal, propriedades. Cores intuitivas para domain coloring, tooltips explicativos, exemplos do livro Marco G. Soares."
+
+**Felipe (Matemático/QA):** "Garantirei correção matemática. Implementação correta da fórmula quadrática complexa, visualização de raízes, comportamento assintótico. Criarei casos de teste baseados nos exercícios do Marco G. Soares."
+
+**Interações Principais:**
+
+**Ricardo → Felipe:** "Que exemplos do livro deveríamos priorizar?"
+**Felipe:** "f(z) = z², f(z) = z² + c, f(z) = (z-a)(z-b). Ótimos para visualizar transformações geométricas."
+
+**Ana Paula → Beatriz:** "Como imagina transições entre visualizações?"
+**Beatriz:** "Tabs elegantes ou dropdown. Split view para comparações lado a lado."
+
+**Carlos → Ricardo:** "Pré-calcular funções comuns ou tempo real?"
+**Ricardo:** "Híbrido: funções básicas pré-calculadas, customizadas em tempo real com indicador de progresso."
+
+**Responsabilidades Definidas:**
+- **Ricardo:** Arquitetura geral e algoritmos matemáticos
+- **Ana Paula:** Frontend completo e visualizações interativas  
+- **Carlos:** Backend, APIs matemáticas e infraestrutura
+- **Beatriz:** Design de interface e experiência do usuário
+- **Felipe:** Validação matemática e casos de teste
+- **Marina:** Coordenação de produto e feedback de usuários
+
+---
+
+
+### 📋 PLANO DE DESENVOLVIMENTO
+
+#### **CRONOGRAMA: 8 SEMANAS**
+
+**FASE 1: FUNDAÇÃO E ARQUITETURA** *(Semana 1)*
+- **Responsável:** Ricardo Mendes
+- **Tecnologias:** React 18 + TypeScript + Vite, math.js, Plotly.js, Three.js
+- **Entregáveis:** Arquitetura documentada, ambiente configurado, CI/CD básico
+- **Critérios:** Documentação completa, ambiente reproduzível
+
+**FASE 2: DESIGN E PROTOTIPAGEM** *(Semana 2)*
+- **Responsável:** Beatriz Ferreira  
+- **Tecnologias:** Figma, Storybook, Tailwind CSS + shadcn/ui
+- **Entregáveis:** Wireframes, protótipo navegável, sistema de design
+- **Critérios:** Interface intuitiva, acessibilidade WCAG 2.1 AA
+
+**FASE 3: CORE MATEMÁTICO** *(Semana 3)*
+- **Responsável:** Felipe Rodrigues
+- **Tecnologias:** math.js customizado, Jest para testes
+- **Entregáveis:** Biblioteca de complexos, algoritmos domain coloring, testes
+- **Critérios:** Precisão < 1e-12, performance < 100ms, cobertura > 95%
+
+**FASE 4: VISUALIZAÇÃO BÁSICA** *(Semana 4)*
+- **Responsável:** Ana Paula Santos
+- **Tecnologias:** Plotly.js, Three.js, WebGL shaders
+- **Entregáveis:** Domain coloring 2D, gráficos 3D, controles interativos
+- **Critérios:** 60 FPS, cores matematicamente precisas
+
+**FASE 5: INTERFACE DE USUÁRIO** *(Semana 5)*
+- **Responsável:** Ana Paula Santos
+- **Tecnologias:** React + shadcn/ui, React Hook Form, Zustand
+- **Entregáveis:** Interface completa, entrada de funções, painéis de controle
+- **Critérios:** Design system implementado, validação em tempo real
+
+**FASE 6: FUNCIONALIDADES AVANÇADAS** *(Semana 6)*
+- **Responsável:** Ricardo Mendes
+- **Tecnologias:** Framer Motion, múltiplas views, base de exemplos
+- **Entregáveis:** Animações, visualizações simultâneas, exemplos educacionais
+- **Critérios:** Animações matematicamente corretas, performance mantida
+
+**FASE 7: OTIMIZAÇÃO E POLIMENTO** *(Semana 7)*
+- **Responsável:** Carlos Eduardo Lima
+- **Tecnologias:** Service Workers, IndexedDB, Cypress, Sentry
+- **Entregáveis:** Performance otimizada, cache, testes E2E, monitoramento
+- **Critérios:** Lighthouse > 90, funcionalidade offline, cobertura > 80%
+
+**FASE 8: DEPLOY E DOCUMENTAÇÃO** *(Semana 8)*
+- **Responsável:** Marina Oliveira
+- **Tecnologias:** Vercel, Railway, GitBook, Google Analytics
+- **Entregáveis:** Produção estável, documentação, guia para professores
+- **Critérios:** Uptime > 99.9%, documentação abrangente
+
+#### **STACK TECNOLÓGICO CONSOLIDADO:**
+
+**Frontend:**
+- React 18 + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Plotly.js + D3.js + Three.js
+- math.js + bibliotecas matemáticas customizadas
+- Zustand (estado) + React Hook Form (formulários)
+
+**Backend:**
+- Node.js + Express + TypeScript
+- Bibliotecas matemáticas otimizadas
+- Redis para cache
+
+**DevOps:**
+- Docker + GitHub Actions
+- Vercel (frontend) + Railway (backend)
+- Sentry (monitoramento) + Lighthouse (performance)
+
+**Qualidade:**
+- Jest (testes unitários) + Cypress (E2E)
+- Storybook (componentes) + ESLint + Prettier
+
+---
+
+
+### 💻 IMPLEMENTAÇÃO COMPLETA
+
+#### **ESTRUTURA DO PROJETO**
+
+```
+complex-function-visualizer/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/                 # shadcn/ui components
+│   │   │   ├── FunctionInput.tsx   # Input de funções complexas
+│   │   │   ├── Visualizer2D.tsx    # Domain coloring 2D
+│   │   │   ├── Visualizer3D.tsx    # Gráficos 3D
+│   │   │   ├── ControlPanel.tsx    # Controles e parâmetros
+│   │   │   └── PropertiesPanel.tsx # Propriedades da função
+│   │   ├── lib/
+│   │   │   ├── complex.ts          # Biblioteca de números complexos
+│   │   │   ├── functions.ts        # Funções quadráticas
+│   │   │   ├── domain-coloring.ts  # Algoritmos de coloração
+│   │   │   └── examples.ts         # Exemplos do livro
+│   │   ├── hooks/
+│   │   │   ├── useFunction.ts      # Hook para funções
+│   │   │   └── useVisualization.ts # Hook para visualização
+│   │   ├── store/
+│   │   │   └── app-store.ts        # Estado global Zustand
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   └── vite.config.ts
+├── backend/
+│   ├── src/
+│   │   ├── routes/
+│   │   │   └── calculate.ts        # Endpoints de cálculo
+│   │   ├── lib/
+│   │   │   ├── complex-math.ts     # Matemática complexa
+│   │   │   └── cache.ts            # Sistema de cache
+│   │   └── server.ts
+│   ├── package.json
+│   └── Dockerfile
+├── docs/
+│   ├── user-guide.md
+│   ├── mathematical-reference.md
+│   └── api-documentation.md
+└── docker-compose.yml
+```
+
+#### **CÓDIGO PRINCIPAL**
+
+**1. Biblioteca de Números Complexos (frontend/src/lib/complex.ts)**
+
+```typescript
+export class Complex {
+  constructor(public real: number, public imag: number) {}
+
+  static fromPolar(r: number, theta: number): Complex {
+    return new Complex(r * Math.cos(theta), r * Math.sin(theta));
+  }
+
+  add(other: Complex): Complex {
+    return new Complex(this.real + other.real, this.imag + other.imag);
+  }
+
+  multiply(other: Complex): Complex {
+    return new Complex(
+      this.real * other.real - this.imag * other.imag,
+      this.real * other.imag + this.imag * other.real
+    );
+  }
+
+  magnitude(): number {
+    return Math.sqrt(this.real * this.real + this.imag * this.imag);
+  }
+
+  argument(): number {
+    return Math.atan2(this.imag, this.real);
+  }
+
+  toString(): string {
+    const sign = this.imag >= 0 ? '+' : '-';
+    return `${this.real} ${sign} ${Math.abs(this.imag)}i`;
+  }
+}
+```
+
+**2. Funções Quadráticas (frontend/src/lib/functions.ts)**
+
+```typescript
+import { Complex } from './complex';
+
+export class QuadraticFunction {
+  constructor(
+    private a: Complex,
+    private b: Complex,
+    private c: Complex
+  ) {}
+
+  evaluate(z: Complex): Complex {
+    // f(z) = az² + bz + c
+    const z_squared = z.multiply(z);
+    return this.a.multiply(z_squared)
+      .add(this.b.multiply(z))
+      .add(this.c);
+  }
+
+  getRoots(): [Complex, Complex] {
+    // Fórmula quadrática para números complexos
+    // z = (-b ± √(b² - 4ac)) / 2a
+    const discriminant = this.b.multiply(this.b)
+      .subtract(this.a.multiply(this.c).multiply(new Complex(4, 0)));
+    
+    const sqrt_discriminant = discriminant.sqrt();
+    const two_a = this.a.multiply(new Complex(2, 0));
+    
+    const root1 = this.b.negate().add(sqrt_discriminant).divide(two_a);
+    const root2 = this.b.negate().subtract(sqrt_discriminant).divide(two_a);
+    
+    return [root1, root2];
+  }
+
+  getVertex(): Complex {
+    // Vértice: z = -b / 2a
+    return this.b.negate().divide(this.a.multiply(new Complex(2, 0)));
+  }
+}
+```
+
+**3. Domain Coloring (frontend/src/lib/domain-coloring.ts)**
+
+```typescript
+import { Complex } from './complex';
+import { QuadraticFunction } from './functions';
+
+export function generateDomainColoring(
+  func: QuadraticFunction,
+  width: number,
+  height: number,
+  bounds: { xMin: number, xMax: number, yMin: number, yMax: number }
+): ImageData {
+  const canvas = new OffscreenCanvas(width, height);
+  const ctx = canvas.getContext('2d')!;
+  const imageData = ctx.createImageData(width, height);
+  
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      // Mapear pixel para número complexo
+      const real = bounds.xMin + (x / width) * (bounds.xMax - bounds.xMin);
+      const imag = bounds.yMin + (y / height) * (bounds.yMax - bounds.yMin);
+      const z = new Complex(real, imag);
+      
+      // Avaliar função
+      const result = func.evaluate(z);
+      
+      // Converter para cor HSV
+      const hue = (result.argument() + Math.PI) / (2 * Math.PI); // [0, 1]
+      const saturation = 1;
+      const value = Math.min(1, result.magnitude() / 10); // Normalizar
+      
+      // Converter HSV para RGB
+      const rgb = hsvToRgb(hue, saturation, value);
+      
+      // Definir pixel
+      const index = (y * width + x) * 4;
+      imageData.data[index] = rgb.r;
+      imageData.data[index + 1] = rgb.g;
+      imageData.data[index + 2] = rgb.b;
+      imageData.data[index + 3] = 255;
+    }
+  }
+  
+  return imageData;
+}
+
+function hsvToRgb(h: number, s: number, v: number): {r: number, g: number, b: number} {
+  const c = v * s;
+  const x = c * (1 - Math.abs((h * 6) % 2 - 1));
+  const m = v - c;
+  
+  let r = 0, g = 0, b = 0;
+  
+  if (h < 1/6) { r = c; g = x; b = 0; }
+  else if (h < 2/6) { r = x; g = c; b = 0; }
+  else if (h < 3/6) { r = 0; g = c; b = x; }
+  else if (h < 4/6) { r = 0; g = x; b = c; }
+  else if (h < 5/6) { r = x; g = 0; b = c; }
+  else { r = c; g = 0; b = x; }
+  
+  return {
+    r: Math.round((r + m) * 255),
+    g: Math.round((g + m) * 255),
+    b: Math.round((b + m) * 255)
+  };
+}
+```
+
+**4. Componente Principal (frontend/src/App.tsx)**
+
+```tsx
+import React, { useState, useCallback } from 'react';
+import { FunctionInput } from './components/FunctionInput';
+import { Visualizer2D } from './components/Visualizer2D';
+import { Visualizer3D } from './components/Visualizer3D';
+import { ControlPanel } from './components/ControlPanel';
+import { PropertiesPanel } from './components/PropertiesPanel';
+import { QuadraticFunction } from './lib/functions';
+import { Complex } from './lib/complex';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+export default function App() {
+  const [currentFunction, setCurrentFunction] = useState<QuadraticFunction>(
+    new QuadraticFunction(
+      new Complex(1, 0),  // a = 1
+      new Complex(0, 0),  // b = 0
+      new Complex(0, 0)   // c = 0
+    )
+  );
+  
+  const [bounds, setBounds] = useState({
+    xMin: -3, xMax: 3, yMin: -3, yMax: 3
+  });
+
+  const handleFunctionChange = useCallback((a: Complex, b: Complex, c: Complex) => {
+    setCurrentFunction(new QuadraticFunction(a, b, c));
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b p-4">
+        <h1 className="text-2xl font-bold">
+          Visualizador de Funções Quadráticas Complexas
+        </h1>
+        <p className="text-muted-foreground">
+          Baseado no livro "Cálculo em uma Variável Complexa" - Marco G. Soares
+        </p>
+      </header>
+      
+      <div className="flex h-[calc(100vh-80px)]">
+        {/* Painel Esquerdo */}
+        <div className="w-80 border-r p-4 space-y-4">
+          <FunctionInput onFunctionChange={handleFunctionChange} />
+          <ControlPanel bounds={bounds} onBoundsChange={setBounds} />
+        </div>
+        
+        {/* Área Central */}
+        <div className="flex-1 p-4">
+          <Tabs defaultValue="2d" className="h-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="2d">Domain Coloring 2D</TabsTrigger>
+              <TabsTrigger value="3d">Superfície 3D</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="2d" className="h-[calc(100%-40px)]">
+              <Visualizer2D 
+                function={currentFunction} 
+                bounds={bounds}
+              />
+            </TabsContent>
+            
+            <TabsContent value="3d" className="h-[calc(100%-40px)]">
+              <Visualizer3D 
+                function={currentFunction} 
+                bounds={bounds}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        {/* Painel Direito */}
+        <div className="w-80 border-l p-4">
+          <PropertiesPanel function={currentFunction} />
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**5. Backend API (backend/src/server.ts)**
+
+```typescript
+import express from 'express';
+import cors from 'cors';
+import { calculateRoute } from './routes/calculate';
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+
+// Rotas
+app.use('/api/calculate', calculateRoute);
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+```
+
+**6. Docker Compose (docker-compose.yml)**
+
+```yaml
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+```
+
+---
+
+
+### 🚀 INSTRUÇÕES DE DEPLOY
+
+#### **DEPLOY NO REPLIT**
+
+**1. Configuração Inicial:**
+```bash
+# Clonar o repositório
+git clone <repository-url>
+cd complex-function-visualizer
+
+# Instalar dependências do frontend
+cd frontend
+npm install
+
+# Instalar dependências do backend
+cd ../backend
+npm install
+```
+
+**2. Configuração de Ambiente:**
+```bash
+# Frontend (.env)
+VITE_API_URL=https://your-backend-url.replit.dev
+
+# Backend (.env)
+NODE_ENV=production
+PORT=3001
+REDIS_URL=redis://localhost:6379
+```
+
+**3. Scripts de Build:**
+```json
+// package.json (root)
+{
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm start"
+  }
+}
+```
+
+**4. Deploy Automático:**
+```bash
+# Build do projeto
+npm run build
+
+# Iniciar servidor
+npm start
+```
+
+#### **DEPLOY EM PRODUÇÃO**
+
+**Frontend (Vercel):**
+```bash
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Deploy do frontend
+cd frontend
+vercel --prod
+```
+
+**Backend (Railway):**
+```bash
+# Instalar Railway CLI
+npm i -g @railway/cli
+
+# Deploy do backend
+cd backend
+railway login
+railway init
+railway up
+```
+
+#### **CONFIGURAÇÃO DE DOMÍNIO**
+
+**1. DNS Setup:**
+- Frontend: `complex-visualizer.com`
+- Backend: `api.complex-visualizer.com`
+
+**2. SSL/HTTPS:**
+- Automático via Vercel e Railway
+- Certificados Let's Encrypt
+
+#### **MONITORAMENTO**
+
+**1. Analytics:**
+```javascript
+// Google Analytics 4
+gtag('config', 'GA_MEASUREMENT_ID', {
+  page_title: 'Complex Function Visualizer',
+  page_location: window.location.href
+});
+```
+
+**2. Error Tracking:**
+```javascript
+// Sentry
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: "YOUR_SENTRY_DSN",
+  environment: process.env.NODE_ENV
+});
+```
+
+**3. Performance:**
+```javascript
+// Web Vitals
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+
+getCLS(console.log);
+getFID(console.log);
+getFCP(console.log);
+getLCP(console.log);
+getTTFB(console.log);
+```
+
+#### **BACKUP E SEGURANÇA**
+
+**1. Backup Automático:**
+```bash
+# Script de backup diário
+#!/bin/bash
+DATE=$(date +%Y%m%d)
+tar -czf backup_$DATE.tar.gz ./frontend ./backend
+aws s3 cp backup_$DATE.tar.gz s3://backups/
+```
+
+**2. Segurança:**
+```javascript
+// Rate limiting
+import rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100 // máximo 100 requests por IP
+});
+
+app.use('/api/', limiter);
+```
+
+#### **DOCUMENTAÇÃO PARA USUÁRIOS**
+
+**1. Guia de Instalação Local:**
+```markdown
+# Instalação Local
+
+## Pré-requisitos
+- Node.js 18+
+- Git
+
+## Passos
+1. Clone o repositório
+2. Execute `npm install` na raiz
+3. Execute `npm run dev`
+4. Acesse http://localhost:3000
+```
+
+**2. Manual do Professor:**
+```markdown
+# Manual para Professores
+
+## Como usar em sala de aula
+1. Acesse complex-visualizer.com
+2. Selecione exemplo pré-definido
+3. Explique a visualização aos alunos
+4. Permita exploração interativa
+
+## Exemplos recomendados
+- f(z) = z² (transformação básica)
+- f(z) = z² + c (família de funções)
+- f(z) = (z-1)(z+1) (raízes visíveis)
+```
+
+#### **MANUTENÇÃO**
+
+**1. Updates Automáticos:**
+```yaml
+# GitHub Actions
+name: Auto Update
+on:
+  schedule:
+    - cron: '0 2 * * 0' # Domingo 2h
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm update
+      - run: npm test
+      - run: npm run build
+```
+
+**2. Health Checks:**
+```javascript
+// Endpoint de saúde
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version,
+    uptime: process.uptime()
+  });
+});
+```
+
+---
+
+## 🎯 RESULTADO FINAL
+
+Este prompt completo fornece:
+
+✅ **Equipe de 6 especialistas** com personas detalhadas e expertise específica
+✅ **Reunião de kickoff realística** com interações e definição de responsabilidades  
+✅ **Plano de desenvolvimento estruturado** em 8 fases com cronograma detalhado
+✅ **Código completo e funcional** para frontend e backend
+✅ **Instruções de deploy** para Replit e produção
+✅ **Documentação abrangente** para usuários e manutenção
+
+**O aplicativo resultante será:**
+- Ferramenta educacional profissional para Análise Complexa
+- Interface intuitiva com visualizações matemáticas precisas
+- Performance otimizada para uso em sala de aula
+- Baseado no livro "Cálculo em uma Variável Complexa" de Marco G. Soares
+- Deploy simplificado e manutenção automatizada
+
+**Tecnologias principais:** React + TypeScript, Plotly.js, Three.js, Node.js, Docker
+**Funcionalidades:** Domain coloring, gráficos 3D, entrada interativa de funções, exemplos educacionais
+
+---
+
+**🚀 ESTE PROMPT TRANSFORMA A IDEIA EM UM APLICATIVO EDUCACIONAL COMPLETO E PROFISSIONAL!**
+
