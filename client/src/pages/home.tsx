@@ -92,14 +92,8 @@ export default function Home() {
                     </TabsContent>
                     
                     <TabsContent value="3d-surface" className="mt-0">
-                      <div className="h-96 flex items-center justify-center bg-muted rounded-lg">
-                        <div className="text-center">
-                          <i className="fas fa-cube text-6xl text-primary mb-4"></i>
-                          <h3 className="text-lg font-semibold mb-2">3D Surface View</h3>
-                          <p className="text-sm text-muted-foreground">
-                            Interactive 3D visualization would be rendered here
-                          </p>
-                        </div>
+                      <div className="h-96">
+                        <ThreeDVisualization />
                       </div>
                     </TabsContent>
                     
