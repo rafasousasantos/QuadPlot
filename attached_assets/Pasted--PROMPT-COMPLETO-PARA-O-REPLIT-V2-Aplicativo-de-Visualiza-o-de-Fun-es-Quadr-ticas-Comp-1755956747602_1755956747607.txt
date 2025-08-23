@@ -1,0 +1,868 @@
+# 🚀 PROMPT COMPLETO PARA O REPLIT - V2
+
+## Aplicativo de Visualização de Funções Quadráticas Complexas
+
+---
+
+Você é o Manus, um sistema avançado de formação de equipes de desenvolvimento. Sua missão é analisar o objetivo de um aplicativo e formar automaticamente a equipe perfeita de especialistas para desenvolvê-lo com excelência.
+
+**OBJETIVO DO APLICATIVO:**
+"Quero criar um aplicativo web tipo GeoGebra para visualizar gráficos de funções quadráticas em variável complexa, baseado no livro 'Cálculo em uma Variável Complexa' de Marco G. Soares, que permita aos estudantes universitários explorar e compreender visualmente o comportamento dessas funções através de técnicas como domain coloring e gráficos 3D interativos."
+
+---
+
+### 🎯 ANÁLISE DO OBJETIVO
+
+**Complexidade:** Média a Alta
+- Requer manipulação avançada de números complexos
+- Visualização de funções ℂ → ℂ (4 dimensões em 2D/3D)
+- Algoritmos de domain coloring e renderização 3D
+- Interface interativa com controles matemáticos precisos
+
+**Domínio:** Educação/Matemática
+- Ferramenta educacional para Análise Complexa
+- Público universitário (estudantes e professores)
+- Baseado em literatura acadêmica específica (Marco G. Soares)
+
+**Tecnologias Necessárias:**
+- Frontend web com visualização avançada
+- Bibliotecas matemáticas para números complexos
+- Engines de renderização 2D/3D (WebGL)
+- Interface responsiva e intuitiva
+
+**Requisitos Especiais:**
+- Alta precisão matemática (erro < 1e-12)
+- Performance otimizada para renderização em tempo real
+- Interatividade fluida (zoom, pan, rotação)
+- Compatibilidade com navegadores educacionais
+
+**Público-alvo:**
+- B2C: Estudantes de Matemática, Engenharia, Física
+- Professores universitários de Análise Complexa
+- Pesquisadores em matemática aplicada
+
+---
+
+### 👥 EQUIPE FORMADA
+
+#### **1. Dr. Marina Oliveira** - Gestora de Produto Educacional
+- **Cargo:** Product Manager Senior
+- **Experiência:** 9 anos em produtos EdTech e ferramentas matemáticas
+- **Especialidades:** Gestão de produtos educacionais, UX Research acadêmico, metodologias ágeis para educação
+- **Personalidade:** Focada no impacto educacional, orientada por dados de engajamento e feedback de usuários
+- **Comunicação:** Direta e baseada em resultados, sempre questiona o valor educacional
+
+#### **2. Prof. Ricardo Mendes** - Tech Lead & Especialista Matemático
+- **Cargo:** Senior Software Architect & Mathematics Consultant
+- **Experiência:** 15 anos em software matemático + 8 anos como professor de Análise Complexa
+- **Especialidades:** Arquitetura para aplicações matemáticas, algoritmos de visualização complexa, otimização numérica
+- **Personalidade:** Visionário técnico com base acadêmica sólida, preocupado com correção e escalabilidade
+- **Comunicação:** Didático e preciso, usa analogias para explicar conceitos técnicos
+
+#### **3. Ana Paula Santos** - Desenvolvedora Frontend Especialista
+- **Cargo:** Senior Frontend Developer
+- **Experiência:** 7 anos em desenvolvimento web, 4 anos em visualização de dados
+- **Especialidades:** React/TypeScript, Plotly.js/D3.js/Three.js, WebGL/Canvas, responsive design
+- **Personalidade:** Criativa e perfeccionista, obcecada por performance e UX
+- **Comunicação:** Entusiasta e detalhista, demonstra conceitos com protótipos visuais
+
+#### **4. Carlos Eduardo Lima** - Desenvolvedor Backend & DevOps
+- **Cargo:** Full Stack Developer com foco em Backend
+- **Experiência:** 10 anos em backend, 5 anos com DevOps
+- **Especialidades:** Node.js/Python para APIs matemáticas, otimização de algoritmos, Docker/CI-CD
+- **Personalidade:** Pragmático e focado em soluções robustas, pensa em manutenibilidade
+- **Comunicação:** Objetivo e técnico, discute trade-offs e alternativas
+
+#### **5. Beatriz Ferreira** - Designer UI/UX Educacional
+- **Cargo:** Senior UX/UI Designer
+- **Experiência:** 8 anos em design, 5 anos em produtos educacionais
+- **Especialidades:** Interfaces para ferramentas matemáticas, usabilidade acadêmica, design systems
+- **Personalidade:** Empática e centrada no usuário, defende simplicidade e intuitividade
+- **Comunicação:** Visual e colaborativa, usa sketches e wireframes
+
+#### **6. Dr. Felipe Rodrigues** - Especialista em Análise Complexa & QA
+- **Cargo:** Mathematics Consultant & Quality Assurance Lead
+- **Experiência:** 12 anos como professor universitário, 6 anos em consultoria matemática
+- **Especialidades:** Teoria de funções complexas, validação de algoritmos, testes de precisão
+- **Personalidade:** Meticuloso e acadêmico, preocupado com correção teórica
+- **Comunicação:** Formal e preciso, fundamenta argumentos com teoria matemática
+
+---
+
+### 🗣️ REUNIÃO DE KICKOFF - FOCO NA VISUALIZAÇÃO
+
+**Moderador:** Prof. Ricardo Mendes (Tech Lead)
+
+---
+
+**Ricardo:** "Bom dia, equipe! Hoje, nosso foco é o coração do aplicativo: como vamos transformar as funções quadráticas complexas em visualizações interativas. Ana Paula, Carlos, Felipe, vamos mergulhar nos detalhes técnicos. Ana Paula, você pode começar com suas ideias para o frontend?"
+
+---
+
+#### **DISCUSSÃO TÉCNICA APROFUNDADA**
+
+**Ana Paula (Frontend Developer):**
+"Minha proposta é usar uma combinação de Plotly.js para os gráficos 3D de superfície e um canvas HTML5 com WebGL para o *domain coloring*. Plotly é ótimo para interatividade pronta, mas para o *domain coloring*, onde cada pixel representa um ponto no plano complexo e sua cor é determinada pelo valor da função, precisamos de controle mais granular e performance. WebGL nos permite escrever shaders que farão o cálculo da função e a conversão de cores diretamente na GPU, o que é crucial para renderização em tempo real."
+
+**Carlos Eduardo Lima (Backend/DevOps):**
+"Ana Paula, essa abordagem com WebGL é excelente para performance no cliente. Minha preocupação é com a complexidade dos cálculos para funções mais elaboradas ou para grids muito densos. Vocês planejam fazer o cálculo da função no frontend ou teremos um endpoint no backend para isso? Se for no frontend, precisamos garantir que a biblioteca de números complexos seja otimizada e que não trave a UI. Talvez Web Workers para os cálculos intensivos?"
+
+**Ana Paula:**
+"Boa pergunta, Carlos. Para as funções quadráticas, que são relativamente simples, podemos fazer a avaliação diretamente no frontend usando `math.js` ou uma biblioteca customizada de números complexos. A ideia é que o WebGL receba os parâmetros da função e o domínio, e o shader faça a iteração pixel a pixel. Para evitar travamentos, sim, Web Workers seriam ideais para pré-processamento de dados ou para gerar os dados iniciais para o Plotly, antes de passá-los para o thread principal."
+
+**Dr. Felipe Rodrigues (Especialista Matemático/QA):**
+"Do ponto de vista matemático, a representação do *domain coloring* é fundamental. Precisamos garantir que a conversão de fase e módulo para cor (HSV para RGB) seja matematicamente correta e visualmente intuitiva. O módulo de f(z) deve influenciar a intensidade/brilho, e o argumento (fase) deve mapear para o matiz (hue). Precisamos de uma função `hsvToRgb` robusta. Além disso, para os gráficos 3D, a superfície `|f(z)|` sobre o plano z é uma boa escolha, mas também podemos considerar `Re(f(z))` ou `Im(f(z))` como altura, com a cor representando a fase."
+
+**Ricardo (Tech Lead):**
+"Concordo, Felipe. A precisão da conversão de cores é vital para a interpretação matemática. Ana Paula, você já tem alguma ideia de como estruturar a entrada da função? O usuário digitará a expressão `az^2 + bz + c` ou teremos campos separados para `a`, `b`, `c` (com partes real e imaginária)?"
+
+**Ana Paula:**
+"Minha ideia inicial é ter campos separados para a parte real e imaginária de `a`, `b` e `c`. Isso simplifica o parsing e garante que o usuário insira números complexos corretamente. Podemos ter um parser mais avançado no futuro, mas para o MVP, campos separados são mais seguros. Para a visualização 3D, Plotly.js é excelente, pois já lida com superfícies e interatividade. Para o *domain coloring*, o canvas com WebGL nos dá total controle sobre o mapeamento de cores."
+
+**Carlos:**
+"Se os cálculos forem no frontend, vou focar em otimizar a entrega dos assets e garantir que o ambiente de build do React seja o mais eficiente possível. Também posso ajudar a configurar os Web Workers e a otimizar a comunicação entre eles e o thread principal. Para o backend, podemos ter um serviço leve para persistência de funções salvas ou exemplos, se decidirmos por isso mais tarde."
+
+**Ricardo:**
+"Ótimo. Então, para resumir a abordagem técnica da visualização:
+1. **Input:** Campos separados para Re/Im de a, b, c.
+2. **Cálculo:** Frontend com `math.js` ou biblioteca customizada de complexos. Web Workers para cálculos intensivos.
+3. **Visualização 2D (Domain Coloring):** Canvas HTML5 + WebGL para renderização de alta performance, com shader para mapeamento HSV para RGB.
+4. **Visualização 3D (Superfície):** Plotly.js para `|f(z)|` sobre o plano z, com interatividade pronta.
+5. **Validação:** Felipe, você será crucial para validar a correção matemática das visualizações e dos algoritmos de conversão de cores."
+
+**Felipe:**
+"Perfeito. Vou preparar um conjunto de testes de validação para o *domain coloring* e para os gráficos 3D, incluindo casos com raízes, polos e diferentes comportamentos assintóticos, baseados nos exemplos do livro do Marco G. Soares."
+
+**Ana Paula:**
+"Vou começar a prototipar o componente de *domain coloring* com WebGL e o componente de input de função. Preciso de um esqueleto da biblioteca de números complexos para começar."
+
+**Carlos:**
+"Vou configurar o ambiente de desenvolvimento para suportar Web Workers e garantir que o build do frontend inclua as otimizações necessárias para o WebGL."
+
+**Ricardo:**
+"Excelente! Próxima reunião, quero ver os primeiros protótipos de visualização e a estrutura da biblioteca de números complexos. Vamos manter a comunicação fluida para resolver qualquer impedimento. Obrigado a todos!"
+
+---
+
+### 📋 PLANO DE DESENVOLVIMENTO
+
+#### **CRONOGRAMA: 8 SEMANAS**
+
+**FASE 1: FUNDAÇÃO E ARQUITETURA** *(Semana 1)*
+- **Responsável:** Ricardo Mendes
+- **Tecnologias:** React 18 + TypeScript + Vite, math.js, Plotly.js, Three.js
+- **Entregáveis:** Arquitetura documentada, ambiente configurado, CI/CD básico
+- **Critérios:** Documentação completa, ambiente reproduzível
+
+**FASE 2: DESIGN E PROTOTIPAGEM** *(Semana 2)*
+- **Responsável:** Beatriz Ferreira  
+- **Tecnologias:** Figma, Storybook, Tailwind CSS + shadcn/ui
+- **Entregáveis:** Wireframes, protótipo navegável, sistema de design
+- **Critérios:** Interface intuitiva, acessibilidade WCAG 2.1 AA
+
+**FASE 3: CORE MATEMÁTICO** *(Semana 3)*
+- **Responsável:** Felipe Rodrigues
+- **Tecnologias:** math.js customizado, Jest para testes
+- **Entregáveis:** Biblioteca de complexos, algoritmos domain coloring, testes
+- **Critérios:** Precisão < 1e-12, performance < 100ms, cobertura > 95%
+
+**FASE 4: VISUALIZAÇÃO BÁSICA** *(Semana 4)*
+- **Responsável:** Ana Paula Santos
+- **Tecnologias:** Plotly.js, Three.js, WebGL shaders
+- **Entregáveis:** Domain coloring 2D, gráficos 3D, controles interativos
+- **Critérios:** 60 FPS, cores matematicamente precisas
+
+**FASE 5: INTERFACE DE USUÁRIO** *(Semana 5)*
+- **Responsável:** Ana Paula Santos
+- **Tecnologias:** React + shadcn/ui, React Hook Form, Zustand
+- **Entregáveis:** Interface completa, entrada de funções, painéis de controle
+- **Critérios:** Design system implementado, validação em tempo real
+
+**FASE 6: FUNCIONALIDADES AVANÇADAS** *(Semana 6)*
+- **Responsável:** Ricardo Mendes
+- **Tecnologias:** Framer Motion, múltiplas views, base de exemplos
+- **Entregáveis:** Animações, visualizações simultâneas, exemplos educacionais
+- **Critérios:** Animações matematicamente corretas, performance mantida
+
+**FASE 7: OTIMIZAÇÃO E POLIMENTO** *(Semana 7)*
+- **Responsável:** Carlos Eduardo Lima
+- **Tecnologias:** Service Workers, IndexedDB, Cypress, Sentry
+- **Entregáveis:** Performance otimizada, cache, testes E2E, monitoramento
+- **Critérios:** Lighthouse > 90, funcionalidade offline, cobertura > 80%
+
+**FASE 8: DEPLOY E DOCUMENTAÇÃO** *(Semana 8)*
+- **Responsável:** Marina Oliveira
+- **Tecnologias:** Vercel, Railway, GitBook, Google Analytics
+- **Entregáveis:** Produção estável, documentação, guia para professores
+- **Critérios:** Uptime > 99.9%, documentação abrangente
+
+#### **STACK TECNOLÓGICO CONSOLIDADO:**
+
+**Frontend:**
+- React 18 + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Plotly.js + D3.js + Three.js
+- math.js + bibliotecas matemáticas customizadas
+- Zustand (estado) + React Hook Form (formulários)
+
+**Backend:**
+- Node.js + Express + TypeScript
+- Bibliotecas matemáticas otimizadas
+- Redis para cache
+
+**DevOps:**
+- Docker + GitHub Actions
+- Vercel (frontend) + Railway (backend)
+- Sentry (monitoramento) + Lighthouse (performance)
+
+**Qualidade:**
+- Jest (testes unitários) + Cypress (E2E)
+- Storybook (componentes) + ESLint + Prettier
+
+---
+
+### 💻 IMPLEMENTAÇÃO COMPLETA
+
+#### **ESTRUTURA DO PROJETO**
+
+```
+complex-function-visualizer/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ui/                 # shadcn/ui components
+│   │   │   ├── FunctionInput.tsx   # Input de funções complexas
+│   │   │   ├── Visualizer2D.tsx    # Domain coloring 2D
+│   │   │   ├── Visualizer3D.tsx    # Gráficos 3D
+│   │   │   ├── ControlPanel.tsx    # Controles e parâmetros
+│   │   │   └── PropertiesPanel.tsx # Propriedades da função
+│   │   ├── lib/
+│   │   │   ├── complex.ts          # Biblioteca de números complexos
+│   │   │   ├── functions.ts        # Funções quadráticas
+│   │   │   ├── domain-coloring.ts  # Algoritmos de coloração
+│   │   │   └── examples.ts         # Exemplos do livro
+│   │   ├── hooks/
+│   │   │   ├── useFunction.ts      # Hook para funções
+│   │   │   └── useVisualization.ts # Hook para visualização
+│   │   ├── store/
+│   │   │   └── app-store.ts        # Estado global Zustand
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   └── vite.config.ts
+├── backend/
+│   ├── src/
+│   │   ├── routes/
+│   │   │   └── calculate.ts        # Endpoints de cálculo
+│   │   ├── lib/
+│   │   │   ├── complex-math.ts     # Matemática complexa
+│   │   │   └── cache.ts            # Sistema de cache
+│   │   └── server.ts
+│   ├── package.json
+│   └── Dockerfile
+├── docs/
+│   ├── user-guide.md
+│   ├── mathematical-reference.md
+│   └── api-documentation.md
+└── docker-compose.yml
+```
+
+#### **CÓDIGO PRINCIPAL**
+
+**1. Biblioteca de Números Complexos (frontend/src/lib/complex.ts)**
+
+```typescript
+export class Complex {
+  constructor(public real: number, public imag: number) {}
+
+  static fromPolar(r: number, theta: number): Complex {
+    return new Complex(r * Math.cos(theta), r * Math.sin(theta));
+  }
+
+  add(other: Complex): Complex {
+    return new Complex(this.real + other.real, this.imag + other.imag);
+  }
+
+  multiply(other: Complex): Complex {
+    return new Complex(
+      this.real * other.real - this.imag * other.imag,
+      this.real * other.imag + this.imag * other.real
+    );
+  }
+
+  magnitude(): number {
+    return Math.sqrt(this.real * this.real + this.imag * this.imag);
+  }
+
+  argument(): number {
+    return Math.atan2(this.imag, this.real);
+  }
+
+  toString(): string {
+    const sign = this.imag >= 0 ? '+' : '-';
+    return `${this.real} ${sign} ${Math.abs(this.imag)}i`;
+  }
+
+  // Adicionar métodos para subtração, divisão, raiz quadrada, etc.
+  subtract(other: Complex): Complex {
+    return new Complex(this.real - other.real, this.imag - other.imag);
+  }
+
+  divide(other: Complex): Complex {
+    const denominator = other.real * other.real + other.imag * other.imag;
+    return new Complex(
+      (this.real * other.real + this.imag * other.imag) / denominator,
+      (this.imag * other.real - this.real * other.imag) / denominator
+    );
+  }
+
+  negate(): Complex {
+    return new Complex(-this.real, -this.imag);
+  }
+
+  sqrt(): Complex {
+    const r = this.magnitude();
+    const theta = this.argument();
+    const sqrt_r = Math.sqrt(r);
+    const half_theta = theta / 2;
+    return new Complex(sqrt_r * Math.cos(half_theta), sqrt_r * Math.sin(half_theta));
+  }
+}
+```
+
+**2. Funções Quadráticas (frontend/src/lib/functions.ts)**
+
+```typescript
+import { Complex } from './complex';
+
+export class QuadraticFunction {
+  constructor(
+    private a: Complex,
+    private b: Complex,
+    private c: Complex
+  ) {}
+
+  evaluate(z: Complex): Complex {
+    // f(z) = az² + bz + c
+    const z_squared = z.multiply(z);
+    return this.a.multiply(z_squared)
+      .add(this.b.multiply(z))
+      .add(this.c);
+  }
+
+  getRoots(): [Complex, Complex] {
+    // Fórmula quadrática para números complexos
+    // z = (-b ± √(b² - 4ac)) / 2a
+    const discriminant = this.b.multiply(this.b)
+      .subtract(this.a.multiply(this.c).multiply(new Complex(4, 0)));
+    
+    const sqrt_discriminant = discriminant.sqrt();
+    const two_a = this.a.multiply(new Complex(2, 0));
+    
+    const root1 = this.b.negate().add(sqrt_discriminant).divide(two_a);
+    const root2 = this.b.negate().subtract(sqrt_discriminant).divide(two_a);
+    
+    return [root1, root2];
+  }
+
+  getVertex(): Complex {
+    // Vértice: z = -b / 2a
+    return this.b.negate().divide(this.a.multiply(new Complex(2, 0)));
+  }
+}
+```
+
+**3. Domain Coloring (frontend/src/lib/domain-coloring.ts)**
+
+```typescript
+import { Complex } from './complex';
+import { QuadraticFunction } from './functions';
+
+export function generateDomainColoring(
+  func: QuadraticFunction,
+  width: number,
+  height: number,
+  bounds: { xMin: number, xMax: number, yMin: number, yMax: number }
+): ImageData {
+  const canvas = new OffscreenCanvas(width, height);
+  const ctx = canvas.getContext('2d')!;
+  const imageData = ctx.createImageData(width, height);
+  
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      // Mapear pixel para número complexo
+      const real = bounds.xMin + (x / width) * (bounds.xMax - bounds.xMin);
+      const imag = bounds.yMin + (y / height) * (bounds.yMax - bounds.yMin);
+      const z = new Complex(real, imag);
+      
+      // Avaliar função
+      const result = func.evaluate(z);
+      
+      // Converter para cor HSV
+      const hue = (result.argument() + Math.PI) / (2 * Math.PI); // [0, 1]
+      const saturation = 1;
+      const value = Math.min(1, result.magnitude() / 10); // Normalizar
+      
+      // Converter HSV para RGB
+      const rgb = hsvToRgb(hue, saturation, value);
+      
+      // Definir pixel
+      const index = (y * width + x) * 4;
+      imageData.data[index] = rgb.r;
+      imageData.data[index + 1] = rgb.g;
+      imageData.data[index + 2] = rgb.b;
+      imageData.data[index + 3] = 255;
+    }
+  }
+  
+  return imageData;
+}
+
+function hsvToRgb(h: number, s: number, v: number): {r: number, g: number, b: number} {
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  let r = 0, g = 0, b = 0;
+
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255)
+  };
+}
+```
+
+**4. Componente Visualizer2D (frontend/src/components/Visualizer2D.tsx)**
+
+```tsx
+import React, { useRef, useEffect } from 'react';
+import { QuadraticFunction } from '../lib/functions';
+import { generateDomainColoring } from '../lib/domain-coloring';
+
+interface Visualizer2DProps {
+  function: QuadraticFunction;
+  bounds: { xMin: number; xMax: number; yMin: number; yMax: number };
+}
+
+export const Visualizer2D: React.FC<Visualizer2DProps> = ({ function: func, bounds }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // Gerar o domain coloring
+    const imageData = generateDomainColoring(func, width, height, bounds);
+    ctx.putImageData(imageData, 0, 0);
+  }, [func, bounds]);
+
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      <canvas ref={canvasRef} width={800} height={800} className="border" />
+    </div>
+  );
+};
+```
+
+**5. Componente Visualizer3D (frontend/src/components/Visualizer3D.tsx)**
+
+```tsx
+import React from 'react';
+import Plot from 'react-plotly.js';
+import { QuadraticFunction } from '../lib/functions';
+import { Complex } from '../lib/complex';
+
+interface Visualizer3DProps {
+  function: QuadraticFunction;
+  bounds: { xMin: number; xMax: number; yMin: number; yMax: number };
+}
+
+export const Visualizer3D: React.FC<Visualizer3DProps> = ({ function: func, bounds }) => {
+  const { xMin, xMax, yMin, yMax } = bounds;
+  const numPoints = 50; // Resolução do grid
+
+  const xValues: number[] = [];
+  const yValues: number[] = [];
+  const zValues: number[][] = [];
+  const colors: string[][] = []; // Para domain coloring na superfície
+
+  for (let i = 0; i < numPoints; i++) {
+    const rowZ: number[] = [];
+    const rowColors: string[] = [];
+    const x = xMin + (i / (numPoints - 1)) * (xMax - xMin);
+    xValues.push(x);
+
+    for (let j = 0; j < numPoints; j++) {
+      const y = yMin + (j / (numPoints - 1)) * (yMax - yMin);
+      if (i === 0) yValues.push(y);
+
+      const z_complex = new Complex(x, y);
+      const f_z = func.evaluate(z_complex);
+
+      rowZ.push(f_z.magnitude());
+
+      // Gerar cor baseada na fase para a superfície 3D
+      const hue = (f_z.argument() + Math.PI) / (2 * Math.PI);
+      const saturation = 1;
+      const value = Math.min(1, f_z.magnitude() / 10);
+      const rgb = hsvToRgb(hue, saturation, value);
+      rowColors.push(`rgb(${rgb.r},${rgb.g},${rgb.b})`);
+    }
+    zValues.push(rowZ);
+    colors.push(rowColors);
+  }
+
+  // Função auxiliar para HSV para RGB (duplicada para auto-suficiência do snippet)
+  function hsvToRgb(h: number, s: number, v: number): {r: number, g: number, b: number} {
+    const i = Math.floor(h * 6);
+    const f = h * 6 - i;
+    const p = v * (1 - s);
+    const q = v * (1 - f * s);
+    const t = v * (1 - (1 - f) * s);
+    let r = 0, g = 0, b = 0;
+  
+    switch (i % 6) {
+      case 0: r = v; g = t; b = p; break;
+      case 1: r = q; g = v; b = p; break;
+      case 2: r = p; g = v; b = t; break;
+      case 3: r = p; g = q; b = v; break;
+      case 4: r = t; g = p; b = v; break;
+      case 5: r = v; g = p; b = q; break;
+    }
+  
+    return {
+      r: Math.round(r * 255),
+      g: Math.round(g * 255),
+      b: Math.round(b * 255)
+    };
+  }
+
+  const data: Plotly.Data[] = [
+    {
+      type: 'surface',
+      x: xValues,
+      y: yValues,
+      z: zValues,
+      surfacecolor: colors,
+      colorbar: { title: 'Fase de f(z)' },
+      colorscale: 'Viridis', // Apenas para a barra de cores, o surfacecolor define as cores
+    },
+  ];
+
+  const layout: Partial<Plotly.Layout> = {
+    title: '|f(z)| Surface Plot',
+    autosize: true,
+    margin: { l: 0, r: 0, b: 0, t: 0 },
+    scene: {
+      xaxis: { title: 'Re(z)' },
+      yaxis: { title: 'Im(z)' },
+      zaxis: { title: '|f(z)|' },
+      aspectmode: 'cube',
+    },
+  };
+
+  return (
+    <Plot
+      data={data}
+      layout={layout}
+      useResizeHandler={true}
+      style={{ width: '100%', height: '100%' }}
+      config={{ responsive: true }}
+    />
+  );
+};
+```
+
+**6. Componente FunctionInput (frontend/src/components/FunctionInput.tsx)**
+
+```tsx
+import React, { useState } from 'react';
+import { Complex } from '../lib/complex';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+interface FunctionInputProps {
+  onFunctionChange: (a: Complex, b: Complex, c: Complex) => void;
+}
+
+export const FunctionInput: React.FC<FunctionInputProps> = ({ onFunctionChange }) => {
+  const [aReal, setAReal] = useState('1');
+  const [aImag, setAImag] = useState('0');
+  const [bReal, setBReal] = useState('0');
+  const [bImag, setBImag] = useState('0');
+  const [cReal, setCReal] = useState('0');
+  const [cImag, setCImag] = useState('0');
+
+  const handleSubmit = () => {
+    try {
+      const a = new Complex(parseFloat(aReal), parseFloat(aImag));
+      const b = new Complex(parseFloat(bReal), parseFloat(bImag));
+      const c = new Complex(parseFloat(cReal), parseFloat(cImag));
+      onFunctionChange(a, b, c);
+    } catch (error) {
+      alert('Por favor, insira números válidos para a, b e c.');
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Função Quadrática: f(z) = az² + bz + c</h2>
+      
+      <div>
+        <Label htmlFor="a-real">Coeficiente 'a' (Real)</Label>
+        <Input id="a-real" type="number" value={aReal} onChange={(e) => setAReal(e.target.value)} />
+        <Label htmlFor="a-imag">Coeficiente 'a' (Imaginário)</Label>
+        <Input id="a-imag" type="number" value={aImag} onChange={(e) => setAImag(e.target.value)} />
+      </div>
+
+      <div>
+        <Label htmlFor="b-real">Coeficiente 'b' (Real)</Label>
+        <Input id="b-real" type="number" value={bReal} onChange={(e) => setBReal(e.target.value)} />
+        <Label htmlFor="b-imag">Coeficiente 'b' (Imaginário)</Label>
+        <Input id="b-imag" type="number" value={bImag} onChange={(e) => setBImag(e.target.value)} />
+      </div>
+
+      <div>
+        <Label htmlFor="c-real">Coeficiente 'c' (Real)</Label>
+        <Input id="c-real" type="number" value={cReal} onChange={(e) => setCReal(e.target.value)} />
+        <Label htmlFor="c-imag">Coeficiente 'c' (Imaginário)</Label>
+        <Input id="c-imag" type="number" value={cImag} onChange={(e) => setCImag(e.target.value)} />
+      </div>
+
+      <Button onClick={handleSubmit}>Atualizar Gráfico</Button>
+    </div>
+  );
+};
+```
+
+**7. Componente ControlPanel (frontend/src/components/ControlPanel.tsx)**
+
+```tsx
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+
+interface ControlPanelProps {
+  bounds: { xMin: number; xMax: number; yMin: number; yMax: number };
+  onBoundsChange: (bounds: { xMin: number; xMax: number; yMin: number; yMax: number }) => void;
+}
+
+export const ControlPanel: React.FC<ControlPanelProps> = ({ bounds, onBoundsChange }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    onBoundsChange({ ...bounds, [name]: parseFloat(value) });
+  };
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Controles de Visualização</h2>
+      <div>
+        <Label htmlFor="xMin">X Mínimo</Label>
+        <Input id="xMin" name="xMin" type="number" value={bounds.xMin} onChange={handleChange} />
+      </div>
+      <div>
+        <Label htmlFor="xMax">X Máximo</Label>
+        <Input id="xMax" name="xMax" type="number" value={bounds.xMax} onChange={handleChange} />
+      </div>
+      <div>
+        <Label htmlFor="yMin">Y Mínimo</Label>
+        <Input id="yMin" name="yMin" type="number" value={bounds.yMin} onChange={handleChange} />
+      </div>
+      <div>
+        <Label htmlFor="yMax">Y Máximo</Label>
+        <Input id="yMax" name="yMax" type="number" value={bounds.yMax} onChange={handleChange} />
+      </div>
+    </div>
+  );
+};
+```
+
+**8. Componente PropertiesPanel (frontend/src/components/PropertiesPanel.tsx)**
+
+```tsx
+import React from 'react';
+import { QuadraticFunction } from '../lib/functions';
+
+interface PropertiesPanelProps {
+  function: QuadraticFunction;
+}
+
+export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ function: func }) => {
+  const roots = func.getRoots();
+  const vertex = func.getVertex();
+
+  return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Propriedades da Função</h2>
+      <div>
+        <p><strong>Raiz 1:</strong> {roots[0].toString()}</p>
+        <p><strong>Raiz 2:</strong> {roots[1].toString()}</p>
+      </div>
+      <div>
+        <p><strong>Vértice:</strong> {vertex.toString()}</p>
+      </div>
+      {/* Adicionar mais propriedades conforme necessário */}
+    </div>
+  );
+};
+```
+
+**9. Componente Principal (frontend/src/App.tsx) - Atualizado**
+
+```tsx
+import React, { useState, useCallback } from 'react';
+import { FunctionInput } from './components/FunctionInput';
+import { Visualizer2D } from './components/Visualizer2D';
+import { Visualizer3D } from './components/Visualizer3D';
+import { ControlPanel } from './components/ControlPanel';
+import { PropertiesPanel } from './components/PropertiesPanel';
+import { QuadraticFunction } from './lib/functions';
+import { Complex } from './lib/complex';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+export default function App() {
+  const [currentFunction, setCurrentFunction] = useState<QuadraticFunction>(
+    new QuadraticFunction(
+      new Complex(1, 0),  // a = 1
+      new Complex(0, 0),  // b = 0
+      new Complex(0, 0)   // c = 0
+    )
+  );
+  
+  const [bounds, setBounds] = useState({
+    xMin: -3, xMax: 3, yMin: -3, yMax: 3
+  });
+
+  const handleFunctionChange = useCallback((a: Complex, b: Complex, c: Complex) => {
+    setCurrentFunction(new QuadraticFunction(a, b, c));
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b p-4">
+        <h1 className="text-2xl font-bold">
+          Visualizador de Funções Quadráticas Complexas
+        </h1>
+        <p className="text-muted-foreground">
+          Baseado no livro "Cálculo em uma Variável Complexa" - Marco G. Soares
+        </p>
+      </header>
+      
+      <div className="flex h-[calc(100vh-80px)]">
+        {/* Painel Esquerdo */}
+        <div className="w-80 border-r p-4 space-y-4">
+          <FunctionInput onFunctionChange={handleFunctionChange} />
+          <ControlPanel bounds={bounds} onBoundsChange={setBounds} />
+        </div>
+        
+        {/* Área Central */}
+        <div className="flex-1 p-4">
+          <Tabs defaultValue="2d" className="h-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="2d">Domain Coloring 2D</TabsTrigger>
+              <TabsTrigger value="3d">Superfície 3D</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="2d" className="h-[calc(100%-40px)]">
+              <Visualizer2D 
+                function={currentFunction} 
+                bounds={bounds}
+              />
+            </TabsContent>
+            
+            <TabsContent value="3d" className="h-[calc(100%-40px)]">
+              <Visualizer3D 
+                function={currentFunction} 
+                bounds={bounds}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
+        
+        {/* Painel Direito */}
+        <div className="w-80 border-l p-4">
+          <PropertiesPanel function={currentFunction} />
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**10. Backend API (backend/src/server.ts) - Mantido**
+
+```typescript
+import express from 'express';
+import cors from 'cors';
+import { calculateRoute } from './routes/calculate';
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+
+// Rotas
+app.use('/api/calculate', calculateRoute);
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+```
+
+**11. Docker Compose (docker-compose.yml) - Mantido**
+
+```yaml
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+```
+
+---
+
