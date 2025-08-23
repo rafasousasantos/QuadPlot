@@ -1,0 +1,122 @@
+import React from 'react';
+import Plot from 'react-plotly.js';
+import { QuadraticFunction } from '../lib/functions';
+import { Complex } from '../lib/complex';
+
+interface Visualizer3DProps {
+  function: QuadraticFunction;
+  bounds: { xMin: number; xMax: number; yMin: number; yMax: number };
+}
+
+// Função auxiliar para converter HSV para RGB, usada para o domain coloring na superfície
+// H (Hue): Matiz, representa a fase do número complexo (0 a 360 graus, mapeado para 0 a 1)
+// S (Saturation): Saturação, geralmente 1 para cores vibrantes
+// V (Value): Valor/Brilho, representa o módulo do número complexo (0 a 1)
+function hsvToRgb(h: number, s: number, v: number): {r: number, g: number, b: number} {
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  let r = 0, g = 0, b = 0;
+
+  switch (i % 6) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255)
+  };
+}
+
+export const Visualizer3D: React.FC<Visualizer3DProps> = ({ function: func, bounds }) => {
+  const { xMin, xMax, yMin, yMax } = bounds;
+  const numPoints = 50; // Define a resolução do grid para a superfície (50x50 pontos)
+
+  const xValues: number[] = []; // Valores do eixo Real (Re(z))
+  const yValues: number[] = []; // Valores do eixo Imaginário (Im(z))
+  const zValues: number[][] = []; // Valores do eixo Z, representando |f(z)|
+  const colors: string[][] = []; // Matriz de cores para o domain coloring na superfície
+
+  // Loop para preencher os valores do grid
+  for (let i = 0; i < numPoints; i++) {
+    const rowZ: number[] = []; // Linha de valores Z para a matriz
+    const rowColors: string[] = []; // Linha de cores para a matriz
+    
+    // Calcula o valor real (x) para a posição atual no grid
+    const x = xMin + (i / (numPoints - 1)) * (xMax - xMin);
+    xValues.push(x);
+
+    for (let j = 0; j < numPoints; j++) {
+      // Calcula o valor imaginário (y) para a posição atual no grid
+      const y = yMin + (j / (numPoints - 1)) * (yMax - yMin);
+      if (i === 0) yValues.push(y); // Adiciona yValues apenas uma vez (na primeira iteração de i)
+
+      // Cria o número complexo z = x + iy
+      const z_complex = new Complex(x, y);
+      // Avalia a função quadrática f(z) = az^2 + bz + c
+      const f_z = func.evaluate(z_complex);
+
+      // Adiciona o módulo de f(z) à matriz Z (altura da superfície)
+      rowZ.push(f_z.magnitude());
+
+      // Calcula o matiz (hue) a partir do argumento (fase) de f(z)
+      // Normaliza a fase para o intervalo [0, 1] para uso no HSV
+      const hue = (f_z.argument() + Math.PI) / (2 * Math.PI);
+      const saturation = 1; // Saturação total para cores vibrantes
+      // Normaliza o módulo para o brilho (value), limitando para evitar valores muito altos
+      const value = Math.min(1, f_z.magnitude() / 10); 
+      
+      // Converte HSV para RGB e adiciona a cor à matriz de cores
+      const rgb = hsvToRgb(hue, saturation, value);
+      rowColors.push(`rgb(${rgb.r},${rgb.g},${rgb.b})`);
+    }
+    zValues.push(rowZ);
+    colors.push(rowColors);
+  }
+
+  // Configuração dos dados para o Plotly.js
+  const data: Plotly.Data[] = [
+    {
+      type: 'surface', // Tipo de gráfico: superfície 3D
+      x: xValues, // Valores do eixo X (Re(z))
+      y: yValues, // Valores do eixo Y (Im(z))
+      z: zValues, // Valores do eixo Z (|f(z)|)
+      surfacecolor: colors, // Aplica a matriz de cores para colorir a superfície
+      colorbar: { title: 'Fase de f(z)' }, // Adiciona uma barra de cores para indicar a fase
+      colorscale: 'Viridis', // Colorscale padrão, mas as cores são definidas por surfacecolor
+    },
+  ];
+
+  // Configuração do layout do gráfico
+  const layout: Partial<Plotly.Layout> = {
+    title: '|f(z)| Surface Plot', // Título do gráfico
+    autosize: true, // Ajusta o tamanho do gráfico automaticamente
+    margin: { l: 0, r: 0, b: 0, t: 0 }, // Margens para ocupar o máximo de espaço
+    scene: { // Configurações da cena 3D
+      xaxis: { title: 'Re(z)' }, // Título do eixo X
+      yaxis: { title: 'Im(z)' }, // Título do eixo Y
+      zaxis: { title: '|f(z)|' }, // Título do eixo Z
+      aspectmode: 'cube', // Proporção dos eixos para um cubo
+    },
+  };
+
+  return (
+    <Plot
+      data={data}
+      layout={layout}
+      useResizeHandler={true} // Permite que o gráfico se redimensione com o container
+      style={{ width: '100%', height: '100%' }} // Ocupa 100% do container
+      config={{ responsive: true }} // Torna o gráfico responsivo
+    />
+  );
+};
+
+
