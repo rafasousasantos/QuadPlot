@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(248, 21%, 99%);
+  --foreground: hsl(226, 15%, 15%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(226, 15%, 15%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(226, 15%, 15%);
+  --primary: hsl(218, 87%, 59%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(226, 15%, 53%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(248, 6%, 95%);
+  --muted-foreground: hsl(226, 15%, 15%);
+  --accent: hsl(210, 20%, 92%);
+  --accent-foreground: hsl(218, 87%, 59%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(220, 13%, 91%);
+  --input: hsl(220, 13%, 97%);
+  --ring: hsl(218, 87%, 59%);
+  --chart-1: hsl(218, 87%, 59%);
+  --chart-2: hsl(142, 76%, 36%);
+  --chart-3: hsl(47, 96%, 53%);
+  --chart-4: hsl(142, 69%, 58%);
+  --chart-5: hsl(340, 75%, 55%);
+  --sidebar: hsl(0, 0%, 100%);
+  --sidebar-foreground: hsl(226, 15%, 15%);
+  --sidebar-primary: hsl(218, 87%, 59%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(210, 20%, 92%);
+  --sidebar-accent-foreground: hsl(218, 87%, 59%);
+  --sidebar-border: hsl(220, 13%, 91%);
+  --sidebar-ring: hsl(218, 87%, 59%);
+  --font-sans: 'Inter', 'Open Sans', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: hsl(224, 71%, 4%);
+  --foreground: hsl(213, 31%, 91%);
+  --card: hsl(224, 71%, 4%);
+  --card-foreground: hsl(213, 31%, 91%);
+  --popover: hsl(224, 71%, 4%);
+  --popover-foreground: hsl(213, 31%, 91%);
+  --primary: hsl(216, 87%, 65%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(215, 28%, 17%);
+  --secondary-foreground: hsl(0, 0%, 100%);
+  --muted: hsl(223, 47%, 11%);
+  --muted-foreground: hsl(215, 20%, 65%);
+  --accent: hsl(216, 34%, 17%);
+  --accent-foreground: hsl(216, 87%, 65%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 85%, 96%);
+  --border: hsl(216, 34%, 17%);
+  --input: hsl(216, 34%, 17%);
+  --ring: hsl(216, 87%, 65%);
+  --chart-1: hsl(216, 87%, 65%);
+  --chart-2: hsl(142, 76%, 36%);
+  --chart-3: hsl(47, 96%, 53%);
+  --chart-4: hsl(142, 69%, 58%);
+  --chart-5: hsl(340, 75%, 55%);
+  --sidebar: hsl(224, 71%, 4%);
+  --sidebar-foreground: hsl(213, 31%, 91%);
+  --sidebar-primary: hsl(216, 87%, 65%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(216, 34%, 17%);
+  --sidebar-accent-foreground: hsl(216, 87%, 65%);
+  --sidebar-border: hsl(216, 34%, 17%);
+  --sidebar-ring: hsl(216, 87%, 65%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  .fa, .fas, .far, .fab {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+  }
+}
+
+/* Custom styles for mathematical elements */
+.math-formula {
+  @apply font-mono text-sm;
+}
+
+.complex-number {
+  @apply font-mono;
+}
+
+/* Canvas smoothing for better domain coloring */
+canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Ensure proper font loading */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2') format('woff2');
+}
