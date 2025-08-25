@@ -1,0 +1,60 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Production build files
+dist
+client/dist
+
+# Local development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# Test files
+test
+tests
+**/*.test.js
+**/*.test.ts
+**/*.spec.js
+**/*.spec.ts
+
+# Documentation
+README.md
+docs
+
+# Replit specific
+.replit
+replit.nix
