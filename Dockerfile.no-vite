@@ -1,0 +1,47 @@
+# Versão sem Vite - Mais leve e sem dependências
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat curl
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package.json package-lock.json* ./
+
+# Instalar apenas dependencies (sem vite)
+RUN npm ci --only=production
+
+# Instalar vite temporariamente só para build
+RUN npm install vite --no-save
+
+# Copiar código
+COPY . .
+
+# Build customizado sem vite no servidor final
+RUN npx vite build && cp server-production.js dist/server.js
+
+# Remover vite após o build
+RUN npm uninstall vite
+
+# Limpeza final
+RUN rm -rf node_modules/.cache
+
+# Verificar estrutura final
+RUN ls -la dist/ && ls -la dist/public/
+
+# Configuração de produção
+ENV NODE_ENV=production
+ENV PORT=5013
+
+# Usuário não-root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:5013/api/health || exit 1
+
+# Expor porta
+EXPOSE 5013
+
+# Comando final sem vite
+CMD ["node", "dist/server.js"]
