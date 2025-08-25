@@ -18,7 +18,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 COPY . .
-# Build both frontend and backend
+# Build both frontend and backend (vite is now in dependencies)
 RUN npm run build
 
 # Production image
