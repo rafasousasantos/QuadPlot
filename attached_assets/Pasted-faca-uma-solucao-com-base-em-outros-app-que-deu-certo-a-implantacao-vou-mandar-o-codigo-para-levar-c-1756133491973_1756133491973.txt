@@ -1,0 +1,122 @@
+faca uma solucao com base em outros app que deu certo a implantacao
+vou mandar o codigo para levar como base# DOCKERFILE PRODUÇÃO - SIGE v8.0
+# Sistema Integrado de Gestão Empresarial
+# Otimizado para Hostinger EasyPanel
+
+FROM python:3.11-slim-bullseye
+
+# Metadados
+LABEL maintainer="SIGE v8.0" \
+      version="8.0" \
+      description="Sistema Integrado de Gestão Empresarial"
+
+# Variáveis de build
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Instalar dependências do sistema (seguindo o guia)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    postgresql-client \
+    curl \
+    wget \
+    gcc \
+    python3-dev \
+    libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Criar usuário não-root para segurança
+RUN groupadd -r sige && useradd -r -g sige sige
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Copiar arquivos de dependências primeiro (otimização de cache)
+COPY pyproject.toml ./
+
+# Gerar requirements.txt e instalar dependências
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir .
+
+# Copiar código da aplicação
+COPY . .
+
+# Criar diretórios necessários
+RUN mkdir -p /app/static/fotos /app/logs && \
+    chown -R sige:sige /app
+
+# Copiar script de entrada para EasyPanel
+COPY docker-entrypoint-easypanel-final.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Mudar para usuário não-root
+USER sige
+
+# Variáveis de ambiente (não-sensíveis)
+ENV FLASK_ENV=production \
+    PORT=5000 \
+    PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    DATABASE_URL=postgresql://sige:sige@viajey_sige:5432/sige?sslmode=disable
+
+# Expor porta
+EXPOSE 5000
+
+# Healthcheck para EasyPanel
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:${PORT:-5000}/health || exit 1
+
+# Comando de entrada (padrão do guia)
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "--access-logfile", "-"# Single-stage build - mais simples e confiável para EasyPanel
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    ffmpeg \
+    curl
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Make entrypoint script executable
+RUN chmod +x entrypoint.sh
+
+# Create uploads directory for temporary file storage
+RUN mkdir -p uploads
+
+# Build only the frontend (vite build)
+RUN npm run build 2>/dev/null || echo "Build completed with warnings"
+
+# Expose port 5007 as requested
+EXPOSE 5007
+
+# Set environment variables
+ENV PORT=5007
+ENV NODE_ENV=production
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+
+# Change ownership of app directory to nodejs user
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+# Health check to ensure the application is running
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:5007/api/health || exit 1
+
+# Start the application using entrypoint script
+CMD ["./entrypoint.sh"]
