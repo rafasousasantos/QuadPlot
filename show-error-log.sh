@@ -25,10 +25,16 @@ echo ""
 echo "💡 ANÁLISE DO ERRO:"
 echo "=================="
 
-if grep -q "ERR_MODULE_NOT_FOUND.*vite" error-log.txt; then
+if grep -q "ERR_MODULE_NOT_FOUND.*vite\|Cannot find package 'vite'" error-log.txt; then
     echo "❌ PROBLEMA: Servidor de produção tentando importar 'vite'"
-    echo "🔧 CAUSA: server/vite.ts está sendo incluído no build"
-    echo "✅ SOLUÇÃO: Usar build sem vite (./build-no-vite.sh)"
+    echo "🔧 CAUSA: server/vite.ts está sendo incluído no build de produção"
+    echo "💡 EXPLICAÇÃO: O build atual inclui código do Vite que não deveria estar na produção"
+    echo ""
+    echo "✅ SOLUÇÕES DISPONÍVEIS:"
+    echo "   1. ./build-no-vite.sh (recomendado para deploy)"
+    echo "   2. Mover vite para dependencies (funciona mas adiciona peso)"
+    echo ""
+    echo "🚀 EXECUTE: ./build-no-vite.sh && NODE_ENV=production PORT=5013 node dist/server.js"
     
 elif grep -q "EADDRINUSE" error-log.txt; then
     echo "❌ PROBLEMA: Porta já está ocupada"
