@@ -28,11 +28,12 @@ COPY . .
 # Tornar entrypoint executável
 RUN chmod +x entrypoint.sh
 
-# Build da aplicação com fallback inteligente
-RUN npm run build || echo "Build with warnings - continuing..."
+# Copiar script de build corrigido e aplicar correção
+COPY build-fixed.sh ./
+RUN chmod +x build-fixed.sh
 
-# Garantir que temos servidor de produção
-RUN cp server-production.js dist/server.js || true
+# Build da aplicação com correção para vite
+RUN ./build-fixed.sh
 
 # Criar usuário não-root para segurança
 RUN addgroup -g 1001 -S nodejs && \

@@ -52,15 +52,8 @@ elif [ -f "dist/index.js" ]; then
 else
     echo "📦 No build found - building application..."
     
-    # Build completo
-    npm run build
-    
-    # Usar servidor sem vite como fallback
-    if [ ! -f "dist/index.js" ] || grep -q "vite" dist/index.js; then
-        echo "🔧 Using no-vite fallback..."
-        cp server-production.js dist/server.js
-        exec node dist/server.js
-    else
-        exec node dist/index.js
-    fi
+    # Usar build corrigido que resolve erro vite
+    echo "🔧 Using fixed build (dynamic imports)..."
+    ./build-fixed.sh
+    exec node dist/index.js
 fi
