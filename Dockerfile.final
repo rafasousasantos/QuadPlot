@@ -1,0 +1,53 @@
+# Complex Function Visualizer - MÉTODO QUE FUNCIONA
+# Baseado em apps que funcionaram no EasyPanel
+
+FROM node:20-alpine
+
+# Metadados
+LABEL maintainer="Complex Function Visualizer" \
+      description="Educational Complex Function Visualizer - Método Simples que Funciona"
+
+# Instalar dependências básicas
+RUN apk add --no-cache curl bash
+
+# Diretório de trabalho
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+
+# Instalar dependências
+RUN npm install
+
+# Copiar código da aplicação
+COPY . .
+
+# Build frontend apenas (único necessário)
+RUN npx vite build
+
+# Preparar servidor usando método que funciona
+RUN cp server-production.js dist/server.js
+
+# Tornar script executável
+RUN chmod +x ultra-simple-start.sh
+
+# Criar usuário não-root
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
+# Variáveis de ambiente
+ENV NODE_ENV=production
+ENV PORT=5013
+
+# Expor porta
+EXPOSE 5013
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:5013/api/health || exit 1
+
+# Usar método simples que funciona
+CMD ["node", "dist/server.js"]

@@ -1,0 +1,53 @@
+# Complex Function Visualizer - Dockerfile Simples
+# Baseado em apps que funcionaram no EasyPanel
+
+FROM node:20-alpine
+
+# Metadados
+LABEL maintainer="Complex Function Visualizer" \
+      description="Educational Complex Function Visualizer - Simple Build"
+
+# Instalar dependências básicas
+RUN apk add --no-cache curl bash
+
+# Diretório de trabalho
+WORKDIR /app
+
+# Copiar package files
+COPY package*.json ./
+
+# Instalar dependências
+RUN npm install
+
+# Copiar todo o código
+COPY . .
+
+# Tornar entrypoint executável
+RUN chmod +x docker-entrypoint-final.sh
+
+# Build frontend (único build necessário)
+RUN npm run build || npx vite build
+
+# Garantir que temos servidor limpo
+RUN cp server-production.js dist/server.js
+
+# Criar usuário não-root
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
+
+USER nodejs
+
+# Variáveis de ambiente
+ENV NODE_ENV=production
+ENV PORT=5013
+
+# Expor porta
+EXPOSE 5013
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:5013/api/health || exit 1
+
+# Usar entrypoint simples
+ENTRYPOINT ["./docker-entrypoint-final.sh"]
