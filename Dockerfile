@@ -8,6 +8,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
+# Install production dependencies only (vite is now in dependencies)
 RUN npm ci --only=production
 
 # Build the application
