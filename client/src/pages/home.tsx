@@ -14,7 +14,7 @@ import { QuadraticFunction } from '../lib/functions';
 import { ThemeToggle } from '../components/ThemeToggle';
 
 export default function Home() {
-  const { selectedTab, setSelectedTab, currentFunction, bounds } = useAppStore();
+  const { selectedTab, setSelectedTab, currentFunction, bounds, isAnimating, setIsAnimating, animationSpeed, setAnimationSpeed } = useAppStore();
 
   return (
     <div className="min-h-screen bg-background">
@@ -175,13 +175,75 @@ export default function Home() {
 
                   <div className="p-6 bg-gradient-to-br from-background to-muted/20">
                     <TabsContent value="domain-coloring" className="mt-0 animate-fade-in">
-                      <div className="relative">
-                        <div className="absolute top-4 right-4 z-10 flex items-center space-x-2">
-                          <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-muted-foreground border">
-                            Real-time Domain Coloring
+                      <div className="space-y-4">
+                        {/* Animation Controls */}
+                        <div className="flex items-center space-x-4 p-4 bg-background/50 backdrop-blur-sm rounded-lg border">
+                          <div className="flex items-center space-x-2">
+                            <i className="fas fa-play text-primary"></i>
+                            <span className="text-sm font-medium">Animation:</span>
                           </div>
+                          
+                          <button 
+                            onClick={() => setIsAnimating(!isAnimating)}
+                            className={`px-4 py-2 rounded transition-colors ${
+                              isAnimating 
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30' 
+                                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                            }`}
+                            data-testid="button-toggle-animation"
+                          >
+                            <i className={`fas ${isAnimating ? 'fa-stop' : 'fa-play'} mr-2`}></i>
+                            {isAnimating ? 'Stop' : 'Play'}
+                          </button>
+                          
+                          {isAnimating && (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm text-muted-foreground">Speed:</span>
+                              <button 
+                                onClick={() => setAnimationSpeed(0.5)}
+                                className={`px-2 py-1 text-xs rounded transition-colors ${
+                                  animationSpeed === 0.5 
+                                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' 
+                                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                }`}
+                                data-testid="button-speed-0.5"
+                              >
+                                0.5x
+                              </button>
+                              <button 
+                                onClick={() => setAnimationSpeed(1)}
+                                className={`px-2 py-1 text-xs rounded transition-colors ${
+                                  animationSpeed === 1 
+                                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' 
+                                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                }`}
+                                data-testid="button-speed-1"
+                              >
+                                1x
+                              </button>
+                              <button 
+                                onClick={() => setAnimationSpeed(2)}
+                                className={`px-2 py-1 text-xs rounded transition-colors ${
+                                  animationSpeed === 2 
+                                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' 
+                                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                }`}
+                                data-testid="button-speed-2"
+                              >
+                                2x
+                              </button>
+                            </div>
+                          )}
                         </div>
-                        <DomainColoringCanvas />
+                        
+                        <div className="relative">
+                          <div className="absolute top-4 right-4 z-10 flex items-center space-x-2">
+                            <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-muted-foreground border">
+                              Real-time Domain Coloring
+                            </div>
+                          </div>
+                          <DomainColoringCanvas />
+                        </div>
                       </div>
                     </TabsContent>
                     
