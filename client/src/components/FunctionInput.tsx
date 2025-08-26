@@ -11,7 +11,7 @@ import { QuadraticFunction } from '../lib/functions';
 
 export function FunctionInput() {
   const { currentFunction, setFunction } = useAppStore();
-  const [expression, setExpression] = useState(currentFunction.expression);
+  const [expression, setExpression] = useState('');
   
   // Enhanced coefficient inputs as discussed in the technical specification
   const [realA, setRealA] = useState('1');
@@ -21,10 +21,16 @@ export function FunctionInput() {
   const [realC, setRealC] = useState('0.5');
   const [imagC, setImagC] = useState('0.3');
 
-  // Update coefficients when function changes externally
+  // Initialize expression when component mounts
   useEffect(() => {
-    if (currentFunction instanceof QuadraticFunction) {
-      // Extract coefficients if possible (this would need function introspection)
+    if (currentFunction?.expression) {
+      setExpression(currentFunction.expression);
+    }
+  }, []);
+
+  // Update expression when function changes externally (but only if user hasn't been typing)
+  useEffect(() => {
+    if (currentFunction?.expression && expression === '') {
       setExpression(currentFunction.expression);
     }
   }, [currentFunction]);
@@ -47,10 +53,14 @@ export function FunctionInput() {
 
   const handleUpdateFromExpression = () => {
     try {
-      const func = parseFunction(expression);
-      setFunction(func);
+      const func = parseFunction(expression.trim());
+      if (func) {
+        setFunction(func);
+        console.log('Function updated successfully:', func.expression);
+      }
     } catch (error) {
       console.error('Failed to parse function:', error);
+      // Keep the user's input in the field even if parsing fails
     }
   };
 

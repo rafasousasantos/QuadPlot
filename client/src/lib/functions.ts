@@ -12,9 +12,9 @@ export class QuadraticFunction implements ComplexFunction {
   expression: string;
 
   constructor(
-    private a: Complex,
-    private b: Complex,
-    private c: Complex
+    public a: Complex,
+    public b: Complex,
+    public c: Complex
   ) {
     this.expression = `${this.formatCoeff(a)}z² + ${this.formatCoeff(b)}z + ${this.formatCoeff(c)}`;
   }
