@@ -282,19 +282,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Animation Controls */}
-            <div className="visualization-container animate-in">
-              <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-3/10 to-transparent">
-                <h3 className="font-semibold text-foreground flex items-center">
-                  <i className="fas fa-play mr-2 text-chart-3"></i>
-                  Animation Controls
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1">Animates function parameters over time</p>
-              </div>
-              <div className="p-4">
-                <AnimationControls />
-              </div>
-            </div>
+
           </div>
 
           {/* Enhanced Right Sidebar */}

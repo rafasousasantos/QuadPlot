@@ -15,7 +15,9 @@ export function DomainColoringCanvas() {
     zoomIn,
     zoomOut,
     resetView,
-    pan
+    pan,
+    isAnimating,
+    setIsAnimating
   } = useAppStore();
 
   const [isDragging, setIsDragging] = React.useState(false);
@@ -146,6 +148,19 @@ export function DomainColoringCanvas() {
             data-testid="button-reset-view"
           >
             <i className="fas fa-home"></i>
+          </button>
+          <div className="border-l border-border mx-2"></div>
+          <button 
+            onClick={() => setIsAnimating(!isAnimating)}
+            className={`p-2 rounded transition-colors ${
+              isAnimating 
+                ? 'text-green-600 bg-green-100 dark:bg-green-900/30' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-background'
+            }`}
+            title={isAnimating ? "Stop Animation" : "Start Animation"}
+            data-testid="button-toggle-animation"
+          >
+            <i className={`fas ${isAnimating ? 'fa-stop' : 'fa-play'}`}></i>
           </button>
         </div>
       </div>
