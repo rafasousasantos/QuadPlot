@@ -8,6 +8,30 @@ The application provides interactive visualization of complex functions using do
 
 Preferred communication style: Simple, everyday language.
 
+# Production Deployment
+
+## EasyPanel Deployment Solution
+
+The application is configured for production deployment on EasyPanel using a multi-stage Docker approach that resolves ERR_MODULE_NOT_FOUND Vite issues:
+
+- **Deployment Method**: Docker-based deployment via Dockerfile.easypanel
+- **Server Architecture**: CommonJS production server (server-production.cjs) to avoid ESM conflicts
+- **Build Process**: Vite frontend build with production config (vite.config.production.ts) that disables problematic Replit plugins
+- **Port Configuration**: Port 5013 with health check endpoint at /api/health
+- **Environment Variables**: NODE_ENV=production, PORT=5013, REPL_ID="" (disables Replit plugins)
+
+## Recent Deployment Changes (August 2025)
+
+Based on comprehensive EasyPanel deployment guide and user feedback about Vite deployment errors:
+
+1. **Created Dockerfile.easypanel**: Multi-stage build that installs all dependencies for build phase, then creates minimal production container
+2. **Implemented server-production.cjs**: Pure CommonJS server avoiding all ESM import issues that caused deployment failures
+3. **Added vite.config.production.ts**: Simplified Vite config without Replit plugins for clean production builds
+4. **Built build-easypanel.sh**: Automated build and validation script with security checks and local testing
+5. **Created EASYPANEL-DEPLOY.md**: Complete deployment guide with troubleshooting steps
+
+This solution successfully resolves the "Cannot find package 'vite'" error and other production dependency issues by using a clean separation between development and production environments.
+
 # System Architecture
 
 ## Frontend Architecture

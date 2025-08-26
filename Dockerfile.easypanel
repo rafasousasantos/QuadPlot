@@ -1,0 +1,66 @@
+# Dockerfile Final para EasyPanel - Solução Otimizada do Guia
+FROM node:20-alpine AS base
+
+# Instalar dependências do sistema
+RUN apk add --no-cache libc6-compat curl bash
+
+# Etapa de instalação de dependências
+FROM base AS deps
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package.json package-lock.json* ./
+
+# Instalar TODAS as dependências (incluindo devDependencies para o build)
+RUN npm ci
+
+# Etapa de build
+FROM base AS builder
+WORKDIR /app
+
+# Copiar dependências da etapa anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Definir variáveis de ambiente para o build
+ENV NODE_ENV=production
+ENV REPL_ID=""
+
+# Fazer o build apenas do frontend
+RUN npx vite build --config vite.config.production.ts
+
+# Copiar servidor CommonJS para dist
+RUN cp server-production.cjs dist/server.cjs
+
+# Etapa de produção
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=5013
+
+# Criar usuário não-root para segurança
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+
+# Copiar apenas os arquivos necessários para produção
+COPY --from=builder /app/dist ./dist
+
+# Criar package.json mínimo para produção
+RUN echo '{"name":"complex-function-visualizer","version":"1.0.0","type":"commonjs"}' > package.json
+
+# Instalar apenas express e dependências essenciais
+RUN npm install express --save --production && npm cache clean --force
+
+# Definir permissões
+RUN chown -R nodejs:nodejs /app
+USER nodejs
+
+EXPOSE 5013
+
+# Health check para EasyPanel
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:5013/api/health || exit 1
+
+# Comando final - usar servidor CommonJS
+CMD ["node", "dist/server.cjs"]

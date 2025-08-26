@@ -1,0 +1,277 @@
+# Guia Definitivo: Deploy com Dockerfile no EasyPanel - Informações Atualizadas
+
+## Introdução
+
+Baseado na pesquisa da documentação oficial do EasyPanel e análise de problemas comuns da comunidade, este guia fornece informações específicas e atualizadas sobre como resolver problemas de deploy com Dockerfile no EasyPanel, especialmente o erro `ERR_MODULE_NOT_FOUND` com Vite.
+
+## Como o EasyPanel Processa Dockerfiles
+
+### Detecção Automática e Prioridades
+
+O EasyPanel segue uma hierarquia específica para processar aplicações [1]:
+
+1. **Se existe Dockerfile**: O EasyPanel usa automaticamente o Dockerfile para build
+2. **Se não há Dockerfile**: Usa Cloud Native Buildpacks para detecção automática
+3. **Builders alternativos**: Heroku Buildpacks, Paketo Buildpacks, ou Nixpacks
+
+Esta informação é crucial porque significa que o EasyPanel **sempre** tentará usar seu Dockerfile se ele existir, sem fallbacks automáticos.
+
+### Variáveis Mágicas do EasyPanel
+
+O EasyPanel fornece variáveis especiais que são automaticamente injetadas [2]:
+
+- `$(PROJECT_NAME)`: Nome do projeto no EasyPanel
+- `$(SERVICE_NAME)`: Nome do serviço específico
+- `$(PRIMARY_DOMAIN)`: Domínio primário configurado
+
+Estas variáveis estão disponíveis tanto em **build-time** quanto em **run-time**, o que é importante para configurações dinâmicas.
+
+## Problemas Específicos Identificados
+
+### 1. Problema de Dependências Cross-Platform
+
+A pesquisa revelou um problema comum documentado no repositório oficial do Vite [3]. O erro `ERR_MODULE_NOT_FOUND` frequentemente ocorre quando:
+
+> "node_modules são montados de um ambiente diferente. Removi o mount do volume e executei `npm ci` no container e funcionou."
+
+Este é exatamente o tipo de problema que pode ocorrer no EasyPanel quando:
+- O build acontece em um ambiente diferente do desenvolvimento
+- Dependências são copiadas entre diferentes arquiteturas
+- Cache de node_modules não é limpo adequadamente
+
+### 2. Configuração de Environment Variables
+
+O EasyPanel disponibiliza variáveis de ambiente tanto em build-time quanto run-time [4]. Isso significa que variáveis como `NODE_ENV` e `REPL_ID` devem ser configuradas corretamente na interface do EasyPanel, não apenas no Dockerfile.
+
+### 3. Estrutura de Build Multi-Stage
+
+O EasyPanel funciona melhor com Dockerfiles multi-stage que separam claramente:
+- **Etapa de dependências**: Instalação de todas as dependências
+- **Etapa de build**: Compilação da aplicação
+- **Etapa de produção**: Runtime otimizado
+
+## Soluções Específicas para EasyPanel
+
+### Solução 1: Dockerfile Otimizado para EasyPanel
+
+Baseado na documentação oficial e práticas recomendadas [5]:
+
+```dockerfile
+# Dockerfile otimizado especificamente para EasyPanel
+FROM node:20-alpine AS base
+
+# Instalar dependências do sistema necessárias
+RUN apk add --no-cache libc6-compat
+
+# Etapa 1: Instalação de dependências
+FROM base AS deps
+WORKDIR /app
+
+# Copiar apenas arquivos de dependências primeiro (cache layer)
+COPY package.json package-lock.json* ./
+
+# Instalar TODAS as dependências (incluindo devDependencies)
+# Isso é crucial para o EasyPanel porque o build precisa de ferramentas como Vite
+RUN npm ci --include=dev
+
+# Etapa 2: Build da aplicação
+FROM base AS builder
+WORKDIR /app
+
+# Copiar dependências da etapa anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Configurar variáveis de ambiente específicas para EasyPanel
+ENV NODE_ENV=production
+ENV REPL_ID=""
+ENV CI=true
+
+# Executar build
+RUN npm run build
+
+# Verificar se o build foi bem-sucedido
+RUN ls -la dist/ && echo "Build completed successfully"
+
+# Etapa 3: Produção
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=5013
+
+# Criar usuário não-root para segurança
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copiar apenas arquivos necessários para produção
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./package.json
+
+# Instalar apenas dependências de produção
+RUN npm ci --only=production && npm cache clean --force
+
+# Configurar permissões
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+EXPOSE 5013
+
+# Health check específico para EasyPanel
+HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5013/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))" || exit 1
+
+CMD ["node", "dist/index.js"]
+```
+
+### Solução 2: Configuração de Environment no EasyPanel
+
+Na interface do EasyPanel, configure estas variáveis na seção "Environment" [6]:
+
+**Variáveis Obrigatórias:**
+- `NODE_ENV=production`
+- `PORT=5013`
+- `REPL_ID=""` (vazio para desabilitar plugins específicos do Replit)
+
+**Variáveis Opcionais:**
+- `CI=true` (para builds mais estáveis)
+- `NPM_CONFIG_CACHE=/tmp/.npm` (cache temporário)
+
+### Solução 3: Package.json Otimizado
+
+```json
+{
+  "scripts": {
+    "build": "npm run clean && npm run build:frontend && npm run build:backend",
+    "build:frontend": "vite build --mode production",
+    "build:backend": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist/",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "nodemon --exec ts-node server/index.ts",
+    "dev:frontend": "vite"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.0",
+    "concurrently": "^8.0.0"
+  }
+}
+```
+
+## Configurações Específicas do EasyPanel
+
+### Proxy Port Configuration
+
+O EasyPanel requer configuração específica da porta de proxy [7]. Na seção "Domains & Proxy":
+
+- **Proxy Port**: 5013 (deve corresponder à porta EXPOSE no Dockerfile)
+- **Domain**: Configurar domínio personalizado ou usar o gerado automaticamente
+- **HTTPS**: Habilitado automaticamente com Let's Encrypt
+
+### Deploy Settings
+
+Na seção "Deploy settings" do EasyPanel [8]:
+
+- **Replicas**: 1 (para aplicações simples)
+- **Command**: Deixar vazio (usar CMD do Dockerfile)
+- **Arguments**: Deixar vazio
+- **Auto Deploy**: Habilitar após confirmar que funciona
+
+### Build Context
+
+Certifique-se de que o contexto do build no EasyPanel está configurado corretamente:
+- **Root Directory**: `/` (raiz do repositório)
+- **Dockerfile Path**: `./Dockerfile` (ou caminho específico se diferente)
+
+## Troubleshooting Específico do EasyPanel
+
+### Problema 1: Build Falha com "Cannot find module"
+
+**Sintomas**: Erro durante o build no EasyPanel
+**Causa**: Dependências não instaladas corretamente
+**Solução**: 
+1. Verificar se `npm ci --include=dev` está no Dockerfile
+2. Confirmar que package-lock.json está no repositório
+3. Limpar cache do EasyPanel (rebuild from scratch)
+
+### Problema 2: Runtime Error "ERR_MODULE_NOT_FOUND"
+
+**Sintomas**: Build sucede mas aplicação falha ao iniciar
+**Causa**: Vite sendo importado em produção
+**Solução**:
+1. Verificar se build gera código limpo sem imports do Vite
+2. Usar servidor Express limpo como alternativa
+3. Configurar variáveis de ambiente corretamente
+
+### Problema 3: Health Check Falha
+
+**Sintomas**: EasyPanel marca serviço como unhealthy
+**Causa**: Endpoint de health check não implementado
+**Solução**:
+```javascript
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV 
+  });
+});
+```
+
+## Comparação com Outros Hosts
+
+### Vantagens do EasyPanel
+
+1. **Interface Simples**: Configuração visual de variáveis e domínios
+2. **Auto-SSL**: Certificados Let's Encrypt automáticos
+3. **Detecção Automática**: Fallback para buildpacks se Dockerfile falhar
+4. **Variáveis Mágicas**: Configuração dinâmica de projeto/serviço
+
+### Limitações Identificadas
+
+1. **Docker Privilegiado**: Não suportado [9]
+2. **Build Cache**: Limitado comparado a outros hosts
+3. **Debugging**: Logs menos detalhados durante build
+4. **Documentação**: Menos exemplos específicos para casos complexos
+
+## Checklist Final para EasyPanel
+
+Antes de fazer deploy no EasyPanel:
+
+**Dockerfile:**
+- [ ] Multi-stage build implementado
+- [ ] `npm ci --include=dev` na etapa de build
+- [ ] `npm ci --only=production` na etapa de produção
+- [ ] Health check endpoint implementado
+- [ ] Porta EXPOSE corresponde à configuração do proxy
+
+**EasyPanel Configuration:**
+- [ ] Variáveis de ambiente configuradas
+- [ ] Proxy port definido corretamente
+- [ ] Domínio configurado
+- [ ] Auto-deploy desabilitado inicialmente
+
+**Código:**
+- [ ] Build local funciona (`npm run build`)
+- [ ] Servidor inicia localmente (`npm start`)
+- [ ] Health check responde (`curl localhost:5013/api/health`)
+- [ ] Não há imports do Vite no código de produção
+
+## Referências
+
+[1] EasyPanel Builders Documentation: https://easypanel.io/docs/builders
+[2] EasyPanel App Service Documentation: https://easypanel.io/docs/services/app
+[3] Vite GitHub Discussion #20372: https://github.com/vitejs/vite/discussions/20372
+[4] EasyPanel Environment Variables: https://easypanel.io/docs/services/app#environment
+[5] EasyPanel Express.js Guide: https://easypanel.io/docs/quickstarts/express
+[6] EasyPanel App Service Environment: https://easypanel.io/docs/services/app#environment
+[7] EasyPanel Domains & Proxy: https://easypanel.io/docs/services/app#domains--proxy
+[8] EasyPanel Deploy Settings: https://easypanel.io/docs/services/app#deploy-settings
+[9] Activepieces Issue #1117: https://github.com/activepieces/activepieces/issues/1117
+

@@ -1,0 +1,380 @@
+# Guia Completo: Resolvendo Erro de Deploy no EasyPanel
+
+## 🔍 Análise do Problema
+
+### O Erro
+Você está enfrentando o erro `ERR_MODULE_NOT_FOUND: Cannot find package 'vite'` ao fazer deploy no EasyPanel via GitHub e Dockerfile.
+
+### Diagnóstico Técnico
+
+**Problema Principal:** O Vite está sendo importado em tempo de execução no ambiente de produção, mas não está disponível nas dependências de produção.
+
+**Evidências do erro:**
+- O erro aparece em `/app/dist/index.js` linha 130:49
+- Código: `'ERR_MODULE_NOT_FOUND'`
+- O Node.js v20.19.4 não consegue encontrar o pacote 'vite'
+
+### Problemas Identificados na Configuração Atual
+
+#### 1. **Dockerfile Problemático**
+- Usa `npm ci --only=production` que exclui devDependencies
+- O Vite precisa estar disponível durante o build
+- Build multi-estágio não está copiando dependências corretamente
+
+#### 2. **Vite Config Complexo**
+- Plugins condicionais baseados em `NODE_ENV` e `REPL_ID`
+- Usa `import.meta.dirname` que pode falhar
+- Dependências específicas do Replit causam problemas
+
+#### 3. **Estrutura de Build Inconsistente**
+- Dockerfile espera arquivos em `dist/`
+- Vite config gera em `dist/public`
+- Scripts de entrada procuram arquivos diferentes
+
+#### 4. **Ambiente EasyPanel**
+- Variáveis de ambiente não definidas corretamente
+- Build acontece em ambiente diferente do desenvolvimento
+- Dependências não instaladas na ordem correta
+
+## 🛠️ Soluções Completas
+
+### Solução 1: Dockerfile Corrigido (RECOMENDADA)
+
+Substitua seu Dockerfile atual por este:
+
+```dockerfile
+# Dockerfile otimizado para EasyPanel
+FROM node:20-alpine AS base
+
+# Instalar dependências do sistema
+RUN apk add --no-cache libc6-compat
+
+# Etapa de instalação de dependências
+FROM base AS deps
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package.json package-lock.json* ./
+
+# Instalar TODAS as dependências (incluindo devDependencies para o build)
+RUN npm ci
+
+# Etapa de build
+FROM base AS builder
+WORKDIR /app
+
+# Copiar dependências da etapa anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Definir variáveis de ambiente para o build
+ENV NODE_ENV=production
+ENV REPL_ID=""
+
+# Fazer o build da aplicação
+RUN npm run build
+
+# Etapa de produção
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=5013
+
+# Criar usuário não-root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copiar apenas os arquivos necessários para produção
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./package.json
+
+# Instalar apenas dependências de produção
+RUN npm ci --only=production && npm cache clean --force
+
+# Definir permissões
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+EXPOSE 5013
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5013/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))" || exit 1
+
+CMD ["node", "dist/index.js"]
+```
+
+**Principais mudanças:**
+- Instala todas as dependências na etapa de build
+- Define `REPL_ID=""` para desabilitar plugins problemáticos
+- Separa corretamente build e produção
+- Comando final simplificado
+
+### Solução 2: Vite Config Simplificado
+
+Crie um arquivo `vite.config.production.ts`:
+
+```typescript
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "client", "src"),
+      "@shared": path.resolve(__dirname, "shared"),
+      "@assets": path.resolve(__dirname, "attached_assets"),
+    },
+  },
+  root: path.resolve(__dirname, "client"),
+  build: {
+    outDir: path.resolve(__dirname, "dist/public"),
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  define: {
+    'process.env.NODE_ENV': '"production"',
+  },
+});
+```
+
+**E atualize seu package.json:**
+
+```json
+{
+  "scripts": {
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "vite build --config vite.config.production.ts",
+    "build:backend": "tsc",
+    "start": "node dist/index.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "nodemon --exec ts-node server/index.ts",
+    "dev:frontend": "vite"
+  },
+  "dependencies": {
+    "express": "^4.18.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.0",
+    "nodemon": "^3.0.0",
+    "ts-node": "^10.9.0",
+    "concurrently": "^8.0.0"
+  }
+}
+```
+
+### Solução 3: Servidor Express Limpo (ALTERNATIVA)
+
+Se as soluções acima não funcionarem, use este servidor Express limpo.
+
+Crie um arquivo `server-production.js` na raiz do projeto:
+
+```javascript
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+
+const app = express();
+const PORT = process.env.PORT || 5013;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'dist/public')));
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// API routes (ajuste conforme sua estrutura)
+// app.use('/api', require('./dist/api'));
+
+// Serve React app for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/public/index.html'));
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🔍 Environment: ${process.env.NODE_ENV}`);
+  console.log(`📁 Serving static files from: ${path.join(__dirname, 'dist/public')}`);
+});
+```
+
+**E modifique o Dockerfile para usar este servidor:**
+
+```dockerfile
+# ... (mesmo início do Dockerfile corrigido)
+
+# Na etapa final, adicione:
+COPY --from=builder /app/server-production.js ./server-production.js
+
+# E mude o CMD para:
+CMD ["node", "server-production.js"]
+```
+
+### Solução 4: Script de Build Robusto
+
+Crie um arquivo `build.sh`:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "🔧 Starting build process..."
+
+# Limpar builds anteriores
+rm -rf dist/
+
+# Build frontend
+echo "📦 Building frontend..."
+NODE_ENV=production npx vite build --config vite.config.production.ts
+
+# Build backend
+echo "🔨 Building backend..."
+npx tsc
+
+# Copiar arquivos necessários
+echo "📋 Copying production files..."
+cp server-production.js dist/server.js
+cp package.json dist/
+
+echo "✅ Build completed successfully!"
+```
+
+Torne executável: `chmod +x build.sh`
+
+E atualize o package.json:
+```json
+{
+  "scripts": {
+    "build": "./build.sh",
+    "start": "node dist/server.js"
+  }
+}
+```
+
+## ⚙️ Configuração no EasyPanel
+
+### Variáveis de Ambiente
+Configure estas variáveis no seu projeto EasyPanel:
+
+- `NODE_ENV=production`
+- `PORT=5013`
+- `REPL_ID=""` (vazio para desabilitar plugins do Replit)
+
+### Comandos de Build
+- **Build Command:** `npm run build`
+- **Start Command:** `npm start`
+
+### Context Path
+Certifique-se de que o contexto do Docker aponta para a raiz do projeto onde está o `package.json`.
+
+## 🧪 Como Testar
+
+### Teste Local com Docker
+```bash
+# Build da imagem
+docker build -t meu-app .
+
+# Executar container
+docker run -p 5013:5013 meu-app
+
+# Testar no navegador
+curl http://localhost:5013/api/health
+```
+
+### Verificação de Build
+```bash
+# Verificar se o build funciona
+npm run build
+
+# Verificar arquivos gerados
+ls -la dist/
+
+# Verificar se não há imports do Vite no código final
+grep -r "vite" dist/ || echo "✅ Nenhuma referência ao Vite encontrada"
+```
+
+## 🔧 Debugging
+
+### Logs de Debug
+Adicione no início do seu arquivo principal:
+
+```javascript
+console.log('🔍 Debug Info:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', process.env.PORT);
+console.log('Working Directory:', process.cwd());
+console.log('Files in dist:', require('fs').readdirSync('./dist'));
+```
+
+### Checklist de Verificação
+- [ ] Vite está em `devDependencies`, não em `dependencies`
+- [ ] `npm run build` funciona localmente
+- [ ] `dist/index.js` não contém imports do Vite
+- [ ] Variáveis de ambiente configuradas no EasyPanel
+- [ ] Dockerfile usa multi-stage build corretamente
+- [ ] Health check endpoint funciona
+
+## 📋 Passos de Implementação
+
+### Implementação Rápida (Solução 1)
+1. **Substitua o Dockerfile** pelo corrigido
+2. **Configure variáveis** no EasyPanel
+3. **Faça commit** no GitHub
+4. **Tente o deploy** novamente
+
+### Se Ainda Houver Problemas (Solução 3)
+1. **Adicione o arquivo** `server-production.js`
+2. **Modifique o Dockerfile** para usar este servidor
+3. **Teste localmente** com Docker
+4. **Deploy novamente**
+
+### Para Máxima Compatibilidade (Solução 4)
+1. **Crie o script** `build.sh`
+2. **Adicione o vite.config.production.ts**
+3. **Atualize package.json**
+4. **Teste todo o processo** localmente
+
+## 🎯 Por Que Essas Soluções Funcionam
+
+### Problema Original
+O seu Dockerfile original instalava apenas dependências de produção (`npm ci --only=production`), mas o Vite é necessário durante o build e estava listado como devDependency.
+
+### Como as Soluções Resolvem
+
+1. **Dockerfile Corrigido:** Instala todas as dependências na etapa de build, depois remove devDependencies na produção
+2. **Vite Config Simplificado:** Remove plugins problemáticos que causam imports desnecessários
+3. **Servidor Express Limpo:** Elimina completamente a dependência do Vite em produção
+4. **Script de Build:** Garante que o processo de build seja consistente
+
+### Compatibilidade com EasyPanel
+- Usa Node.js Alpine para menor tamanho
+- Expõe porta corretamente
+- Inclui health check
+- Segue boas práticas de segurança
+- Funciona com GitHub integration
+
+## 🚀 Resultado Esperado
+
+Após implementar essas soluções, você deve conseguir:
+- ✅ Deploy bem-sucedido no EasyPanel
+- ✅ Aplicação rodando na porta 5013
+- ✅ Health check funcionando
+- ✅ Frontend servido corretamente
+- ✅ APIs funcionando normalmente
+
+Se ainda houver problemas após implementar a Solução 1, passe para a Solução 3 (servidor Express limpo) que é praticamente à prova de falhas.
+

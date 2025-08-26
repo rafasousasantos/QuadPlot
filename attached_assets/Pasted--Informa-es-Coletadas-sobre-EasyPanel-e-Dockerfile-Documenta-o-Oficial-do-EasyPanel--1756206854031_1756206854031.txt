@@ -1,0 +1,71 @@
+# Informações Coletadas sobre EasyPanel e Dockerfile
+
+## Documentação Oficial do EasyPanel
+
+### Como o EasyPanel Processa Dockerfiles
+- **Detecção Automática**: Se o repositório tem um `Dockerfile`, o EasyPanel usa ele automaticamente
+- **Fallback**: Se não há Dockerfile, usa Cloud Native Buildpacks para detectar o tipo de app
+- **Variáveis Mágicas**: EasyPanel fornece variáveis especiais:
+  - `$(PROJECT_NAME)`: Nome do projeto
+  - `$(SERVICE_NAME)`: Nome do serviço  
+  - `$(PRIMARY_DOMAIN)`: Domínio primário do serviço
+
+### Configurações Importantes
+- **Environment Variables**: Disponíveis em build-time e run-time
+- **Proxy Port**: Configuração crucial para apps web (porta que o app escuta)
+- **Mounts**: Para persistir dados entre restarts
+- **Deploy Settings**: Configurar replicas, command e arguments
+
+### Builders Disponíveis
+1. **Dockerfile** (mais controle, mais esforço)
+2. **Heroku Buildpacks** (automático, pode falhar)
+3. **Paketo Buildpacks** (similar ao Heroku)
+4. **Nixpacks** (criado pela Railway, usa Nix packages)
+
+## Práticas Recomendadas para Node.js
+
+### Dockerfile Básico do EasyPanel
+```dockerfile
+FROM node:18
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD [ "node", "index.js" ]
+EXPOSE 3000
+```
+
+### Processo de Deploy
+1. **Source**: GitHub repository, Custom git, ou Docker image
+2. **Build**: Automático se há Dockerfile
+3. **Environment**: Variáveis disponíveis em build e runtime
+4. **Proxy**: Configurar porta correta para apps web
+
+## Problemas Comuns Identificados
+
+### 1. Dependências de Build vs Produção
+- EasyPanel executa `npm install` durante o build
+- Vite precisa estar disponível durante o build
+- Problema: dependências de dev não disponíveis em produção
+
+### 2. Variáveis de Ambiente
+- `NODE_ENV` deve ser definida corretamente
+- Variáveis específicas do Replit (`REPL_ID`) podem causar problemas
+
+### 3. Estrutura de Arquivos
+- EasyPanel espera que o build gere arquivos corretos
+- Comando final deve apontar para arquivo correto
+
+## Diferenças do EasyPanel vs Outros Hosts
+
+### Vantagens
+- Detecção automática de Dockerfile
+- Variáveis mágicas para configuração
+- Interface simples para configurar environment
+- Suporte a múltiplos builders
+
+### Limitações Identificadas
+- Não suporta Docker privilegiado (mencionado em issue do Activepieces)
+- Pode ter problemas com builds complexos
+- Documentação limitada para casos específicos
+
