@@ -1,115 +1,246 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: hsl(248, 21%, 99%);
-  --foreground: hsl(226, 15%, 15%);
+  /* Modern Light Theme - Enhanced Colors */
+  --background: hsl(210, 20%, 98%);
+  --foreground: hsl(221, 39%, 11%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(226, 15%, 15%);
+  --card-foreground: hsl(221, 39%, 11%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(226, 15%, 15%);
-  --primary: hsl(218, 87%, 59%);
+  --popover-foreground: hsl(221, 39%, 11%);
+  
+  /* Primary Brand Colors - Mathematical Theme */
+  --primary: hsl(228, 94%, 67%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(226, 15%, 53%);
-  --secondary-foreground: hsl(0, 0%, 100%);
-  --muted: hsl(248, 6%, 95%);
-  --muted-foreground: hsl(226, 15%, 15%);
-  --accent: hsl(210, 20%, 92%);
-  --accent-foreground: hsl(218, 87%, 59%);
-  --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(0, 0%, 100%);
-  --border: hsl(220, 13%, 91%);
-  --input: hsl(220, 13%, 97%);
-  --ring: hsl(218, 87%, 59%);
-  --chart-1: hsl(218, 87%, 59%);
+  --primary-light: hsl(228, 94%, 85%);
+  --primary-dark: hsl(228, 94%, 45%);
+  
+  /* Secondary & Accent Colors */
+  --secondary: hsl(210, 40%, 95%);
+  --secondary-foreground: hsl(221, 39%, 11%);
+  --accent: hsl(210, 40%, 92%);
+  --accent-foreground: hsl(228, 94%, 67%);
+  
+  /* Semantic Colors */
+  --success: hsl(142, 76%, 36%);
+  --success-foreground: hsl(0, 0%, 100%);
+  --warning: hsl(38, 92%, 50%);
+  --warning-foreground: hsl(0, 0%, 100%);
+  --error: hsl(0, 84%, 60%);
+  --error-foreground: hsl(0, 0%, 100%);
+  
+  /* Neutral Colors */
+  --muted: hsl(210, 20%, 96%);
+  --muted-foreground: hsl(215, 16%, 47%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 97%);
+  --ring: hsl(228, 94%, 67%);
+  
+  /* Mathematical Visualization Colors */
+  --chart-1: hsl(228, 94%, 67%);
   --chart-2: hsl(142, 76%, 36%);
-  --chart-3: hsl(47, 96%, 53%);
-  --chart-4: hsl(142, 69%, 58%);
+  --chart-3: hsl(38, 92%, 50%);
+  --chart-4: hsl(280, 100%, 70%);
   --chart-5: hsl(340, 75%, 55%);
-  --sidebar: hsl(0, 0%, 100%);
-  --sidebar-foreground: hsl(226, 15%, 15%);
-  --sidebar-primary: hsl(218, 87%, 59%);
-  --sidebar-primary-foreground: hsl(0, 0%, 100%);
-  --sidebar-accent: hsl(210, 20%, 92%);
-  --sidebar-accent-foreground: hsl(218, 87%, 59%);
-  --sidebar-border: hsl(220, 13%, 91%);
-  --sidebar-ring: hsl(218, 87%, 59%);
-  --font-sans: 'Inter', 'Open Sans', sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
-  --radius: 0.75rem;
+  
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  
+  /* Layout */
+  --radius: 0.5rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .dark {
-  --background: hsl(224, 71%, 4%);
-  --foreground: hsl(213, 31%, 91%);
-  --card: hsl(224, 71%, 4%);
-  --card-foreground: hsl(213, 31%, 91%);
-  --popover: hsl(224, 71%, 4%);
-  --popover-foreground: hsl(213, 31%, 91%);
-  --primary: hsl(216, 87%, 65%);
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(215, 28%, 17%);
-  --secondary-foreground: hsl(0, 0%, 100%);
-  --muted: hsl(223, 47%, 11%);
+  /* Modern Dark Theme - Professional */
+  --background: hsl(222, 84%, 5%);
+  --foreground: hsl(210, 40%, 98%);
+  --card: hsl(222, 84%, 6%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222, 84%, 6%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  
+  /* Primary Colors - Adjusted for Dark */
+  --primary: hsl(228, 94%, 67%);
+  --primary-foreground: hsl(222, 84%, 5%);
+  --primary-light: hsl(228, 94%, 75%);
+  --primary-dark: hsl(228, 94%, 45%);
+  
+  /* Secondary & Accent Colors */
+  --secondary: hsl(217, 33%, 17%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --accent: hsl(217, 33%, 17%);
+  --accent-foreground: hsl(228, 94%, 67%);
+  
+  /* Semantic Colors - Dark Optimized */
+  --success: hsl(142, 76%, 45%);
+  --success-foreground: hsl(222, 84%, 5%);
+  --warning: hsl(38, 92%, 60%);
+  --warning-foreground: hsl(222, 84%, 5%);
+  --error: hsl(0, 84%, 65%);
+  --error-foreground: hsl(222, 84%, 5%);
+  
+  /* Neutral Colors */
+  --muted: hsl(217, 33%, 12%);
   --muted-foreground: hsl(215, 20%, 65%);
-  --accent: hsl(216, 34%, 17%);
-  --accent-foreground: hsl(216, 87%, 65%);
-  --destructive: hsl(0, 63%, 31%);
-  --destructive-foreground: hsl(0, 85%, 96%);
-  --border: hsl(216, 34%, 17%);
-  --input: hsl(216, 34%, 17%);
-  --ring: hsl(216, 87%, 65%);
-  --chart-1: hsl(216, 87%, 65%);
-  --chart-2: hsl(142, 76%, 36%);
-  --chart-3: hsl(47, 96%, 53%);
-  --chart-4: hsl(142, 69%, 58%);
-  --chart-5: hsl(340, 75%, 55%);
-  --sidebar: hsl(224, 71%, 4%);
-  --sidebar-foreground: hsl(213, 31%, 91%);
-  --sidebar-primary: hsl(216, 87%, 65%);
-  --sidebar-primary-foreground: hsl(0, 0%, 100%);
-  --sidebar-accent: hsl(216, 34%, 17%);
-  --sidebar-accent-foreground: hsl(216, 87%, 65%);
-  --sidebar-border: hsl(216, 34%, 17%);
-  --sidebar-ring: hsl(216, 87%, 65%);
+  --border: hsl(217, 33%, 17%);
+  --input: hsl(217, 33%, 17%);
+  --ring: hsl(228, 94%, 67%);
+  
+  /* Enhanced shadows for dark mode */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  /* Charts for dark mode */
+  --chart-1: hsl(228, 94%, 67%);
+  --chart-2: hsl(142, 76%, 45%);
+  --chart-3: hsl(38, 92%, 60%);
+  --chart-4: hsl(280, 100%, 75%);
+  --chart-5: hsl(340, 75%, 60%);
 }
 
-@layer base {
-  * {
-    @apply border-border;
+/* Global Styles - Enhanced Typography & Layout */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Improvements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.25rem; font-weight: 700; }
+h2 { font-size: 1.875rem; font-weight: 600; }
+h3 { font-size: 1.5rem; font-weight: 600; }
+h4 { font-size: 1.25rem; font-weight: 500; }
+
+/* Code and Math Typography */
+code, pre, .font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+/* Animation & Transitions */
+.animate-in {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
-  }
-
-  .fa, .fas, .far, .fab {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Custom styles for mathematical elements */
-.math-formula {
-  @apply font-mono text-sm;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.complex-number {
-  @apply font-mono;
-}
-
-/* Canvas smoothing for better domain coloring */
-canvas {
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-crisp-edges;
+/* Mathematical Visualization Specific Styles */
+.math-canvas {
   image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
 }
 
-/* Ensure proper font loading */
+.visualization-container {
+  background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Enhanced Interactive Elements */
+.interactive-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.interactive-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.interactive-button:active {
+  transform: translateY(0);
+}
+
+/* Mathematical Legend Styles */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  transition: opacity 0.2s ease;
+}
+
+.legend-item:hover {
+  opacity: 0.8;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 768px) {
+  h1 { font-size: 1.875rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  
+  .visualization-container {
+    margin: 0.5rem;
+    border-radius: calc(var(--radius) * 0.75);
+  }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus Indicators */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+/* FontAwesome & Icon Support */
+.fa, .fas, .far, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
+
 @font-face {
   font-family: 'Font Awesome 6 Free';
   font-style: normal;
@@ -124,4 +255,22 @@ canvas {
   font-weight: 400;
   font-display: block;
   src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2') format('woff2');
+}
+
+/* Mathematical Element Styles */
+.math-formula {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.complex-number {
+  font-family: var(--font-mono);
+}
+
+/* Canvas optimization for domain coloring */
+canvas.math-canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }

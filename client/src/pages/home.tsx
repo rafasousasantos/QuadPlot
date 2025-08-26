@@ -11,47 +11,76 @@ import { AnimationControls } from '../components/AnimationControls';
 import { AnalysisTools } from '../components/AnalysisTools';
 import { useAppStore } from '../store/app-store';
 import { QuadraticFunction } from '../lib/functions';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 export default function Home() {
   const { selectedTab, setSelectedTab, currentFunction, bounds } = useAppStore();
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card border-b border-border shadow-sm">
+      {/* Modern Header */}
+      <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
+            
+            {/* Brand Section */}
             <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <i className="fas fa-chart-line text-primary-foreground text-lg"></i>
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-lg">
+                  <i className="fas fa-infinity text-primary-foreground text-xl"></i>
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-warning rounded-full border-2 border-card"></div>
               </div>
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">Complex Function Visualizer</h1>
-                <p className="text-sm text-muted-foreground">Educational Mathematical Tool</p>
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                  Complex Function Visualizer
+                </h1>
+                <p className="text-sm text-muted-foreground flex items-center">
+                  <i className="fas fa-graduation-cap mr-1 text-xs"></i>
+                  Educational Mathematical Tool
+                </p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="p-2"
+                className="interactive-button hidden md:flex"
                 data-testid="button-help"
+              >
+                <i className="fas fa-question-circle mr-2"></i>
+                Help
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="interactive-button p-2 md:hidden"
+                data-testid="button-help-mobile"
               >
                 <i className="fas fa-question-circle"></i>
               </Button>
+              
+              <ThemeToggle />
+              
               <Button 
-                variant="ghost" 
+                variant="outline" 
                 size="sm"
-                className="p-2"
+                className="interactive-button"
                 data-testid="button-settings"
               >
-                <i className="fas fa-cog"></i>
+                <i className="fas fa-cog mr-2"></i>
+                <span className="hidden md:inline">Settings</span>
               </Button>
+              
               <Button 
                 size="sm"
+                className="interactive-button bg-gradient-to-r from-primary to-primary-dark"
                 data-testid="button-export"
               >
-                <i className="fas fa-save mr-2"></i>Export
+                <i className="fas fa-download mr-2"></i>
+                Export
               </Button>
             </div>
           </div>
@@ -61,62 +90,160 @@ export default function Home() {
       <div className="max-w-7xl mx-auto p-4 lg:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Left Sidebar */}
+          {/* Enhanced Left Sidebar */}
           <div className="lg:col-span-3 space-y-6">
-            <FunctionInput />
-            <ParameterControls />
-            <ExampleFunctions />
+            <div className="space-y-4">
+              <div className="visualization-container animate-in">
+                <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-primary/5 to-transparent">
+                  <h3 className="font-semibold text-foreground flex items-center">
+                    <i className="fas fa-function mr-2 text-primary"></i>
+                    Function Input
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">Define your complex function</p>
+                </div>
+                <div className="p-4">
+                  <FunctionInput />
+                </div>
+              </div>
+
+              <div className="visualization-container animate-in">
+                <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-warning/5 to-transparent">
+                  <h3 className="font-semibold text-foreground flex items-center">
+                    <i className="fas fa-sliders-h mr-2 text-warning"></i>
+                    Parameters
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">Adjust visualization settings</p>
+                </div>
+                <div className="p-4">
+                  <ParameterControls />
+                </div>
+              </div>
+
+              <div className="visualization-container animate-in">
+                <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-success/5 to-transparent">
+                  <h3 className="font-semibold text-foreground flex items-center">
+                    <i className="fas fa-lightbulb mr-2 text-success"></i>
+                    Examples
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">Predefined mathematical functions</p>
+                </div>
+                <div className="p-4">
+                  <ExampleFunctions />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Main Visualization Area */}
           <div className="lg:col-span-6 space-y-6">
             
-            {/* Visualization Tabs */}
-            <div className="bg-card rounded-xl shadow-sm border border-border">
-              <div className="border-b border-border px-6 py-4">
+            {/* Enhanced Visualization Container */}
+            <div className="visualization-container animate-in">
+              <div className="border-b border-border px-6 py-4 bg-gradient-to-r from-muted/20 to-transparent">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground">Mathematical Visualization</h2>
+                    <p className="text-sm text-muted-foreground">Interactive complex function analysis</p>
+                  </div>
+                  <div className="hidden md:flex items-center space-x-2 text-xs text-muted-foreground">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-success rounded-full mr-1"></div>
+                      Live Rendering
+                    </div>
+                  </div>
+                </div>
+                
                 <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value as any)}>
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="domain-coloring" data-testid="tab-domain-coloring">
-                      <i className="fas fa-palette mr-2"></i>Domain Coloring
+                  <TabsList className="grid w-full grid-cols-3 bg-secondary/50">
+                    <TabsTrigger 
+                      value="domain-coloring" 
+                      data-testid="tab-domain-coloring"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200"
+                    >
+                      <i className="fas fa-palette mr-2"></i>
+                      <span className="hidden sm:inline">Domain Coloring</span>
+                      <span className="sm:hidden">Colors</span>
                     </TabsTrigger>
-                    <TabsTrigger value="3d-surface" data-testid="tab-3d-surface">
-                      <i className="fas fa-cube mr-2"></i>3D Surface
+                    <TabsTrigger 
+                      value="3d-surface" 
+                      data-testid="tab-3d-surface"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200"
+                    >
+                      <i className="fas fa-cube mr-2"></i>
+                      <span className="hidden sm:inline">3D Surface</span>
+                      <span className="sm:hidden">3D</span>
                     </TabsTrigger>
-                    <TabsTrigger value="split-view" data-testid="tab-split-view">
-                      <i className="fas fa-chart-line mr-2"></i>Split View
+                    <TabsTrigger 
+                      value="split-view" 
+                      data-testid="tab-split-view"
+                      className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all duration-200"
+                    >
+                      <i className="fas fa-grip-vertical mr-2"></i>
+                      <span className="hidden sm:inline">Split View</span>
+                      <span className="sm:hidden">Split</span>
                     </TabsTrigger>
                   </TabsList>
 
-                  <div className="p-6">
-                    <TabsContent value="domain-coloring" className="mt-0">
-                      <DomainColoringCanvas />
+                  <div className="p-6 bg-gradient-to-br from-background to-muted/20">
+                    <TabsContent value="domain-coloring" className="mt-0 animate-fade-in">
+                      <div className="relative">
+                        <div className="absolute top-4 right-4 z-10 flex items-center space-x-2">
+                          <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-muted-foreground border">
+                            Real-time Domain Coloring
+                          </div>
+                        </div>
+                        <DomainColoringCanvas />
+                      </div>
                     </TabsContent>
                     
-                    <TabsContent value="3d-surface" className="mt-0">
-                      <div className="h-96">
+                    <TabsContent value="3d-surface" className="mt-0 animate-fade-in">
+                      <div className="h-96 relative">
+                        <div className="absolute top-4 right-4 z-10 flex items-center space-x-2">
+                          <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-muted-foreground border">
+                            3D Surface Visualization
+                          </div>
+                        </div>
                         <ThreeDVisualization />
                       </div>
                     </TabsContent>
                     
-                    <TabsContent value="split-view" className="mt-0">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-96">
-                        <div className="border border-border rounded-lg overflow-hidden">
-                          <div className="bg-muted/50 px-3 py-2 border-b border-border">
-                            <h3 className="text-sm font-medium text-muted-foreground flex items-center">
-                              <i className="fas fa-palette mr-2"></i>Coloração de Domínio
-                            </h3>
+                    <TabsContent value="split-view" className="mt-0 animate-fade-in">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-96">
+                        
+                        {/* Domain Coloring Panel */}
+                        <div className="visualization-container overflow-hidden">
+                          <div className="bg-gradient-to-r from-primary/10 to-primary/5 px-4 py-3 border-b border-border/50">
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-sm font-semibold text-foreground flex items-center">
+                                <div className="w-3 h-3 bg-primary rounded-full mr-2 animate-pulse"></div>
+                                <i className="fas fa-palette mr-2 text-primary"></i>
+                                Domain Coloring
+                              </h3>
+                              <div className="text-xs text-muted-foreground bg-background/50 px-2 py-1 rounded">
+                                Real-time
+                              </div>
+                            </div>
                           </div>
-                          <div className="h-[calc(100%-40px)] relative">
+                          <div className="h-[calc(100%-48px)] relative">
                             <DomainColoringCanvas />
                           </div>
                         </div>
-                        <div className="border border-border rounded-lg overflow-hidden">
-                          <div className="bg-muted/50 px-3 py-2 border-b border-border">
-                            <h3 className="text-sm font-medium text-muted-foreground flex items-center">
-                              <i className="fas fa-cube mr-2"></i>Superfície 3D
-                            </h3>
+
+                        {/* 3D Surface Panel */}
+                        <div className="visualization-container overflow-hidden">
+                          <div className="bg-gradient-to-r from-success/10 to-success/5 px-4 py-3 border-b border-border/50">
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-sm font-semibold text-foreground flex items-center">
+                                <div className="w-3 h-3 bg-success rounded-full mr-2 animate-pulse"></div>
+                                <i className="fas fa-cube mr-2 text-success"></i>
+                                3D Surface
+                              </h3>
+                              <div className="text-xs text-muted-foreground bg-background/50 px-2 py-1 rounded">
+                                Interactive
+                              </div>
+                            </div>
                           </div>
-                          <div className="h-[calc(100%-40px)] relative">
+                          <div className="h-[calc(100%-48px)] relative">
                             {currentFunction instanceof QuadraticFunction ? (
                               <div className="w-full h-full bg-background rounded">
                                 <div className="w-full h-full">
@@ -152,14 +279,65 @@ export default function Home() {
               </div>
             </div>
 
-            <AnimationControls />
+            {/* Animation Controls */}
+            <div className="visualization-container animate-in">
+              <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-3/10 to-transparent">
+                <h3 className="font-semibold text-foreground flex items-center">
+                  <i className="fas fa-play mr-2 text-chart-3"></i>
+                  Animation Controls
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">Dynamic parameter animation</p>
+              </div>
+              <div className="p-4">
+                <AnimationControls />
+              </div>
+            </div>
           </div>
 
-          {/* Right Sidebar */}
+          {/* Enhanced Right Sidebar */}
           <div className="lg:col-span-3 space-y-6">
-            <FunctionProperties />
-            {selectedTab !== 'split-view' && <ThreeDVisualization />}
-            <AnalysisTools />
+            <div className="space-y-4">
+              <div className="visualization-container animate-in">
+                <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-accent-foreground/5 to-transparent">
+                  <h3 className="font-semibold text-foreground flex items-center">
+                    <i className="fas fa-info-circle mr-2 text-accent-foreground"></i>
+                    Function Properties
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">Mathematical analysis</p>
+                </div>
+                <div className="p-4">
+                  <FunctionProperties />
+                </div>
+              </div>
+
+              {selectedTab !== 'split-view' && (
+                <div className="visualization-container animate-in">
+                  <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-4/20 to-transparent">
+                    <h3 className="font-semibold text-foreground flex items-center">
+                      <i className="fas fa-cube mr-2 text-chart-4"></i>
+                      3D Preview
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1">Surface visualization</p>
+                  </div>
+                  <div className="p-4">
+                    <ThreeDVisualization />
+                  </div>
+                </div>
+              )}
+
+              <div className="visualization-container animate-in">
+                <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-5/20 to-transparent">
+                  <h3 className="font-semibold text-foreground flex items-center">
+                    <i className="fas fa-calculator mr-2 text-chart-5"></i>
+                    Analysis Tools
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">Advanced mathematical tools</p>
+                </div>
+                <div className="p-4">
+                  <AnalysisTools />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
