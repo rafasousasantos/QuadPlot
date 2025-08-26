@@ -122,6 +122,32 @@ const Visualizer3D: React.FC<{
   );
 };
 
+// Simple component for split view (no Card wrapper)
+export function ThreeDVisualizationCompact() {
+  const { currentFunction, bounds } = useAppStore();
+
+  if (!(currentFunction instanceof QuadraticFunction)) {
+    return (
+      <div className="flex items-center justify-center h-full bg-muted/20 rounded">
+        <div className="text-center p-4">
+          <i className="fas fa-exclamation-circle text-2xl text-muted-foreground mb-2"></i>
+          <p className="text-xs text-muted-foreground">3D disponível apenas para funções quadráticas</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full">
+      <Visualizer3D 
+        function={currentFunction}
+        bounds={bounds}
+        style={{ width: '100%', height: '100%' }}
+      />
+    </div>
+  );
+}
+
 export function ThreeDVisualization() {
   const { currentFunction, bounds } = useAppStore();
   const [showFullView, setShowFullView] = useState(false);
@@ -183,7 +209,7 @@ export function ThreeDVisualization() {
         </h3>
         
         <div 
-          className="w-full h-48 mb-3"
+          className="w-full h-full"
           data-testid="container-3d-visualization"
         >
           <Visualizer3D 

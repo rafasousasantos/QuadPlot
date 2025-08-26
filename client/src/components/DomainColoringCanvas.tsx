@@ -111,7 +111,7 @@ export function DomainColoringCanvas() {
     <div className="relative">
       <canvas
         ref={canvasRef}
-        className="w-full h-96 border border-border rounded-lg cursor-move"
+        className="w-full h-full border-0 cursor-move"
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}

@@ -10,9 +10,10 @@ import { ExampleFunctions } from '../components/ExampleFunctions';
 import { AnimationControls } from '../components/AnimationControls';
 import { AnalysisTools } from '../components/AnalysisTools';
 import { useAppStore } from '../store/app-store';
+import { QuadraticFunction } from '../lib/functions';
 
 export default function Home() {
-  const { selectedTab, setSelectedTab } = useAppStore();
+  const { selectedTab, setSelectedTab, currentFunction, bounds } = useAppStore();
 
   return (
     <div className="min-h-screen bg-background">
@@ -98,21 +99,50 @@ export default function Home() {
                     </TabsContent>
                     
                     <TabsContent value="split-view" className="mt-0">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <h3 className="text-sm font-medium text-muted-foreground flex items-center">
-                            <i className="fas fa-palette mr-2"></i>Domain Coloring
-                          </h3>
-                          <div className="h-80">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-96">
+                        <div className="border border-border rounded-lg overflow-hidden">
+                          <div className="bg-muted/50 px-3 py-2 border-b border-border">
+                            <h3 className="text-sm font-medium text-muted-foreground flex items-center">
+                              <i className="fas fa-palette mr-2"></i>Coloração de Domínio
+                            </h3>
+                          </div>
+                          <div className="h-[calc(100%-40px)] relative">
                             <DomainColoringCanvas />
                           </div>
                         </div>
-                        <div className="space-y-2">
-                          <h3 className="text-sm font-medium text-muted-foreground flex items-center">
-                            <i className="fas fa-cube mr-2"></i>3D Surface
-                          </h3>
-                          <div className="h-80">
-                            <ThreeDVisualization />
+                        <div className="border border-border rounded-lg overflow-hidden">
+                          <div className="bg-muted/50 px-3 py-2 border-b border-border">
+                            <h3 className="text-sm font-medium text-muted-foreground flex items-center">
+                              <i className="fas fa-cube mr-2"></i>Superfície 3D
+                            </h3>
+                          </div>
+                          <div className="h-[calc(100%-40px)] relative">
+                            {currentFunction instanceof QuadraticFunction ? (
+                              <div className="w-full h-full bg-background rounded">
+                                <div className="w-full h-full">
+                                  {/* Plotly 3D visualization would go here */}
+                                  <div className="flex items-center justify-center h-full">
+                                    <div className="text-center">
+                                      <i className="fas fa-cube text-4xl text-primary mb-3"></i>
+                                      <h4 className="font-medium text-foreground mb-2">Vista de superfície 3D</h4>
+                                      <p className="text-sm text-muted-foreground">
+                                        Função: {currentFunction.toString()}
+                                      </p>
+                                      <div className="mt-3 text-xs text-muted-foreground">
+                                        Intervalo: [{bounds.xMin}, {bounds.xMax}] × [{bounds.yMin}, {bounds.yMax}]
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-center h-full bg-muted/20 rounded">
+                                <div className="text-center p-4">
+                                  <i className="fas fa-exclamation-circle text-2xl text-muted-foreground mb-2"></i>
+                                  <p className="text-xs text-muted-foreground">3D disponível apenas para funções quadráticas</p>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
