@@ -1,0 +1,330 @@
+# Solução Completa: TypeError Missing parameter name (path-to-regexp)
+
+## Análise do Problema
+
+Você está enfrentando um erro relacionado ao **path-to-regexp**, que é uma biblioteca usada internamente pelo Express.js para parsing de rotas. O erro `TypeError: Missing parameter name at 1` indica que há uma rota mal formada no seu código.
+
+### Causa Raiz do Problema
+
+Baseado na pesquisa realizada, este erro é causado por **mudanças breaking no Express v5** [1]. O problema específico é:
+
+> "O erro é causado pelo uso de `:` ou `*` em um dos seus paths, que não é seguido por um nome de parâmetro. No Express 5, o wildcard `*` significa algo diferente do que na versão 4.x."
+
+### O Que Mudou no Express v5
+
+No Express v4, wildcards como `*` funcionavam de forma simples para capturar qualquer coisa. No Express v5, a sintaxe foi atualizada e agora **todos os wildcards devem ter nomes** [2].
+
+**Exemplos de rotas que causam o erro:**
+
+```javascript
+// ❌ Estas rotas causam erro no Express v5
+app.get('*', handler);
+app.get('/*', handler);
+app.all('*', handler);
+app.use('*', middleware);
+
+// ❌ Parâmetros sem nome também causam erro
+app.get('/api/:/', handler);
+app.get('/user/:', handler);
+```
+
+## Soluções Específicas
+
+### Solução 1: Corrigir Rotas Wildcard
+
+**Problema:** Rotas com `*` sem nome
+**Solução:** Adicionar nomes aos wildcards
+
+```javascript
+// ✅ Correto no Express v5
+app.all('/*splat', (req, res) => {
+  res.send('Not Found');
+});
+
+// ✅ Para capturar root path também
+app.all('/{*splat}', (req, res) => {
+  res.send('Not Found');
+});
+
+// ✅ Alternativa mais específica
+app.all('/*catchAll', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+```
+
+### Solução 2: Verificar Todas as Definições de Rotas
+
+Procure no seu código por estas patterns problemáticas:
+
+```javascript
+// ❌ Patterns que causam erro
+app.get('*', ...)           // Wildcard sem nome
+app.post('/*', ...)         // Wildcard sem nome  
+app.use('*', ...)           // Middleware wildcard sem nome
+app.get('/api/:', ...)      // Parâmetro vazio
+app.get('/user/:/', ...)    // Parâmetro mal formado
+
+// ✅ Versões corrigidas
+app.get('/*path', ...)      // Wildcard nomeado
+app.post('/*route', ...)    // Wildcard nomeado
+app.use('/*all', ...)       // Middleware wildcard nomeado
+app.get('/api/:id', ...)    // Parâmetro nomeado
+app.get('/user/:userId/', ...) // Parâmetro bem formado
+```
+
+### Solução 3: Padrões Comuns Corrigidos
+
+**Catch-all routes (404 handlers):**
+```javascript
+// ❌ Antigo (Express v4)
+app.all('*', (req, res) => {
+  res.status(404).send('Page not found');
+});
+
+// ✅ Novo (Express v5)
+app.all('/*path', (req, res) => {
+  res.status(404).send('Page not found');
+});
+```
+
+**Static file serving:**
+```javascript
+// ❌ Antigo
+app.use('/static/*', express.static('public'));
+
+// ✅ Novo
+app.use('/static/*files', express.static('public'));
+```
+
+**API catch-all:**
+```javascript
+// ❌ Antigo
+app.use('/api/*', apiRouter);
+
+// ✅ Novo
+app.use('/api/*routes', apiRouter);
+```
+
+### Solução 4: Verificação Sistemática
+
+Para encontrar todas as rotas problemáticas no seu projeto:
+
+1. **Buscar por wildcards sem nome:**
+```bash
+grep -r "\*[^a-zA-Z]" src/
+grep -r "app\.\w*('.*\*'" src/
+```
+
+2. **Buscar por parâmetros vazios:**
+```bash
+grep -r ":/" src/
+grep -r ":[^a-zA-Z]" src/
+```
+
+3. **Verificar arquivos de rota comuns:**
+- `routes/index.js`
+- `app.js`
+- `server.js`
+- Qualquer arquivo que use `express.Router()`
+
+## Implementação da Solução
+
+### Passo 1: Identificar Rotas Problemáticas
+
+Crie um script para verificar suas rotas:
+
+```javascript
+// verify-routes.js
+const fs = require('fs');
+const path = require('path');
+
+function findProblematicRoutes(dir) {
+  const files = fs.readdirSync(dir);
+  const problematicPatterns = [
+    /app\.\w+\(['"`][^'"`]*\*[^a-zA-Z]/,  // Wildcards sem nome
+    /app\.\w+\(['"`][^'"`]*:[^a-zA-Z]/,   // Parâmetros vazios
+    /router\.\w+\(['"`][^'"`]*\*[^a-zA-Z]/,
+    /router\.\w+\(['"`][^'"`]*:[^a-zA-Z]/
+  ];
+
+  files.forEach(file => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    
+    if (stat.isDirectory()) {
+      findProblematicRoutes(filePath);
+    } else if (file.endsWith('.js') || file.endsWith('.ts')) {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const lines = content.split('\n');
+      
+      lines.forEach((line, index) => {
+        problematicPatterns.forEach(pattern => {
+          if (pattern.test(line)) {
+            console.log(`❌ Problema encontrado em ${filePath}:${index + 1}`);
+            console.log(`   ${line.trim()}`);
+          }
+        });
+      });
+    }
+  });
+}
+
+// Executar verificação
+findProblematicRoutes('./src');
+```
+
+### Passo 2: Aplicar Correções
+
+Para cada rota problemática encontrada, aplique as correções:
+
+```javascript
+// Exemplo de correção completa
+// ANTES (Express v4)
+const express = require('express');
+const app = express();
+
+app.get('/api/users/:id', getUserById);
+app.get('/api/*', apiNotFound);        // ❌ Problemático
+app.all('*', globalNotFound);          // ❌ Problemático
+
+// DEPOIS (Express v5)
+const express = require('express');
+const app = express();
+
+app.get('/api/users/:id', getUserById);
+app.get('/api/*path', apiNotFound);    // ✅ Corrigido
+app.all('/*route', globalNotFound);    // ✅ Corrigido
+```
+
+### Passo 3: Testar as Correções
+
+```javascript
+// test-routes.js
+const request = require('supertest');
+const app = require('./app');
+
+describe('Routes after Express v5 fix', () => {
+  test('Catch-all route works', async () => {
+    const response = await request(app)
+      .get('/nonexistent-route')
+      .expect(404);
+    
+    expect(response.text).toContain('Not Found');
+  });
+
+  test('API catch-all works', async () => {
+    const response = await request(app)
+      .get('/api/nonexistent-endpoint')
+      .expect(404);
+    
+    expect(response.body.error).toBe('API endpoint not found');
+  });
+});
+```
+
+## Casos Específicos Comuns
+
+### React Router + Express
+
+Se você está usando React com Express para servir a SPA:
+
+```javascript
+// ❌ Antigo
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build/index.html'));
+});
+
+// ✅ Novo
+app.get('/*path', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build/index.html'));
+});
+```
+
+### Next.js Custom Server
+
+Para servidores customizados do Next.js:
+
+```javascript
+// ❌ Antigo
+server.all('*', (req, res) => {
+  return handle(req, res);
+});
+
+// ✅ Novo
+server.all('/*path', (req, res) => {
+  return handle(req, res);
+});
+```
+
+### API Gateway Pattern
+
+Para padrões de API Gateway:
+
+```javascript
+// ❌ Antigo
+app.use('/api/v1/*', v1Router);
+app.use('/api/v2/*', v2Router);
+app.use('/api/*', legacyRouter);
+
+// ✅ Novo
+app.use('/api/v1/*endpoints', v1Router);
+app.use('/api/v2/*endpoints', v2Router);
+app.use('/api/*legacy', legacyRouter);
+```
+
+## Verificação Final
+
+Após aplicar as correções, verifique se tudo está funcionando:
+
+1. **Teste local:**
+```bash
+npm start
+# Verificar se não há erros de path-to-regexp
+```
+
+2. **Teste de rotas:**
+```bash
+curl http://localhost:3000/nonexistent-route
+curl http://localhost:3000/api/nonexistent-endpoint
+```
+
+3. **Deploy no EasyPanel:**
+- Faça commit das mudanças
+- Deploy no EasyPanel
+- Verificar logs para confirmar que não há mais erros
+
+## Prevenção Futura
+
+Para evitar este problema no futuro:
+
+1. **Sempre nomear wildcards:**
+   - Use `/*path` em vez de `/*`
+   - Use `/*routes` em vez de `*`
+
+2. **Validar parâmetros:**
+   - Sempre use nomes após `:`
+   - Exemplo: `:id`, `:userId`, `:slug`
+
+3. **Testes automatizados:**
+   - Incluir testes para rotas catch-all
+   - Verificar que 404s funcionam corretamente
+
+4. **Linting rules:**
+   - Adicionar regras ESLint para detectar patterns problemáticos
+
+## Resumo da Solução
+
+O erro `TypeError: Missing parameter name` é causado por **mudanças breaking no Express v5** onde wildcards devem ter nomes. A solução é:
+
+1. ✅ Substituir `*` por `/*nomeDescritivo`
+2. ✅ Verificar todos os parâmetros têm nomes após `:`
+3. ✅ Testar localmente antes do deploy
+4. ✅ Aplicar as mudanças no EasyPanel
+
+Esta solução resolve completamente o problema e torna seu código compatível com Express v5.
+
+## Referências
+
+[1] Express.js Issue #5936: https://github.com/expressjs/express/issues/5936
+[2] DEV.to Article on Express v5 Error: https://dev.to/aryanneupane/express-v5-error-missing-parameter-name-at-position-1-caused-by-in-routes-50d4
+

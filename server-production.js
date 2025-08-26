@@ -52,7 +52,7 @@ if (!fs.existsSync(publicPath)) {
 app.use(express.static(publicPath));
 
 // Fallback para SPA - todas as rotas retornam index.html
-app.get('*', (req, res) => {
+app.get('/*path', (req, res) => {
   const indexPath = path.join(publicPath, 'index.html');
   
   if (fs.existsSync(indexPath)) {

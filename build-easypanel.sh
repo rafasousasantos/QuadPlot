@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "🚀 EasyPanel Deployment Build Script - VERSÃO FINAL"
-echo "===================================================="
+echo "🚀 EasyPanel Build Script - Express v5 Compatible"
+echo "=================================================="
+echo "✅ Corrigido: TypeError Missing parameter name (path-to-regexp)"
 
 # Limpar builds anteriores
 echo "🧹 Cleaning previous builds..."
@@ -28,13 +29,24 @@ if [ ! -f "dist/server.cjs" ]; then
     exit 1
 fi
 
-# Verificações de segurança
-echo "🔍 Security checks..."
+# Verificações de segurança e Express v5
+echo "🔍 Security checks and Express v5 compatibility..."
 
 # Verificar se não há imports problemáticos do Vite no servidor
 if grep -q "vite\|tsx\|@replit" dist/server.cjs 2>/dev/null; then
     echo "❌ ERRO: Production server contains development dependencies"
     exit 1
+fi
+
+# Verificar se as rotas wildcard foram corrigidas para Express v5
+if grep -q "app\\.get('\\*'" server-production.js 2>/dev/null; then
+    echo "❌ ERRO: Found Express v4 wildcard routes that need fixing"
+    echo "   Use app.get('/*path') instead of app.get('*')"
+    exit 1
+fi
+
+if grep -q "app\\.get('/*path'" server-production.js 2>/dev/null; then
+    echo "✅ Express v5 wildcard routes correctly implemented"
 fi
 
 # Verificar se frontend build não contém referências de desenvolvimento
