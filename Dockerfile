@@ -50,10 +50,12 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copiar apenas arquivos necessários para produção
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./package.json
 
-# Instalar apenas dependências de produção
-RUN npm ci --only=production && npm cache clean --force
+# Criar package.json mínimo para produção (apenas express)
+RUN echo '{"name":"complex-function-visualizer","version":"1.0.0","dependencies":{"express":"^4.18.0"}}' > package.json
+
+# Instalar apenas express para o servidor
+RUN npm install express --production && npm cache clean --force
 
 # Configurar permissões
 RUN chown -R nextjs:nodejs /app
