@@ -150,8 +150,8 @@ export function DomainColoringCanvas() {
         </div>
       </div>
       
-      {/* Color Legend */}
-      <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm rounded-lg p-3 shadow-sm">
+      {/* Color Legend - Moved to top-left to avoid covering mouse info */}
+      <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm rounded-lg p-3 shadow-sm z-10">
         <div className="text-xs font-medium text-foreground mb-2">Domain Coloring Legend</div>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="flex items-center space-x-2">

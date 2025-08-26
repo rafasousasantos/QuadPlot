@@ -119,18 +119,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="visualization-container animate-in">
-                <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-success/5 to-transparent">
-                  <h3 className="font-semibold text-foreground flex items-center">
-                    <i className="fas fa-lightbulb mr-2 text-success"></i>
-                    Examples
-                  </h3>
-                  <p className="text-xs text-muted-foreground mt-1">Predefined mathematical functions</p>
-                </div>
-                <div className="p-4">
-                  <ExampleFunctions />
-                </div>
-              </div>
+
             </div>
           </div>
 
@@ -197,7 +186,7 @@ export default function Home() {
                     </TabsContent>
                     
                     <TabsContent value="3d-surface" className="mt-0 animate-fade-in">
-                      <div className="h-96 relative">
+                      <div className="h-[600px] relative">
                         <div className="absolute top-4 right-4 z-10 flex items-center space-x-2">
                           <div className="bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-muted-foreground border">
                             3D Surface Visualization
@@ -208,7 +197,7 @@ export default function Home() {
                     </TabsContent>
                     
                     <TabsContent value="split-view" className="mt-0 animate-fade-in">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-96">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[500px]">
                         
                         {/* Domain Coloring Panel */}
                         <div className="visualization-container overflow-hidden">
@@ -243,7 +232,7 @@ export default function Home() {
                               </div>
                             </div>
                           </div>
-                          <div className="h-[calc(100%-48px)] relative">
+                          <div className="h-[calc(100%-48px)] relative min-h-[350px]">
                             {currentFunction instanceof QuadraticFunction ? (
                               <div className="w-full h-full bg-background rounded">
                                 <div className="w-full h-full">
@@ -279,6 +268,20 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Example Functions */}
+            <div className="visualization-container animate-in">
+              <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-success/5 to-transparent">
+                <h3 className="font-semibold text-foreground flex items-center">
+                  <i className="fas fa-lightbulb mr-2 text-success"></i>
+                  Examples
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">Predefined mathematical functions</p>
+              </div>
+              <div className="p-4">
+                <ExampleFunctions />
+              </div>
+            </div>
+
             {/* Animation Controls */}
             <div className="visualization-container animate-in">
               <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-3/10 to-transparent">
@@ -286,7 +289,7 @@ export default function Home() {
                   <i className="fas fa-play mr-2 text-chart-3"></i>
                   Animation Controls
                 </h3>
-                <p className="text-xs text-muted-foreground mt-1">Dynamic parameter animation</p>
+                <p className="text-xs text-muted-foreground mt-1">Animates function parameters over time</p>
               </div>
               <div className="p-4">
                 <AnimationControls />
@@ -310,20 +313,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {selectedTab !== 'split-view' && (
-                <div className="visualization-container animate-in">
-                  <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-4/20 to-transparent">
-                    <h3 className="font-semibold text-foreground flex items-center">
-                      <i className="fas fa-cube mr-2 text-chart-4"></i>
-                      3D Preview
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-1">Surface visualization</p>
-                  </div>
-                  <div className="p-4">
-                    <ThreeDVisualization />
-                  </div>
-                </div>
-              )}
+
 
               <div className="visualization-container animate-in">
                 <div className="border-b border-border px-4 py-3 bg-gradient-to-r from-chart-5/20 to-transparent">
