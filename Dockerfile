@@ -1,52 +1,66 @@
-# Use Node.js 20 Alpine for smaller image size
+# Dockerfile para EasyPanel - Solução Otimizada
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+# Instalar dependências do sistema
+RUN apk add --no-cache libc6-compat curl bash
+
+# Etapa de instalação de dependências
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package files
+# Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
-# Install production dependencies only (vite is now in dependencies)
-RUN npm ci --only=production
 
-# Build the application
-FROM base AS builder
-WORKDIR /app
-COPY package.json package-lock.json* ./
+# Instalar TODAS as dependências (incluindo devDependencies para o build)
 RUN npm ci
 
-COPY . .
-# Build both frontend and backend (vite is now in dependencies)
-RUN npm run build
+# Etapa de build
+FROM base AS builder
+WORKDIR /app
 
-# Production image
+# Copiar dependências da etapa anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Definir variáveis de ambiente para o build
+ENV NODE_ENV=production
+ENV REPL_ID=""
+
+# Fazer o build apenas do frontend
+RUN npx vite build
+
+# Copiar servidor CommonJS para dist
+RUN cp server-production.js dist/server.cjs
+
+# Etapa de produção
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=5013
 
-# Create non-root user for security
+# Criar usuário não-root para segurança
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN adduser --system --uid 1001 nodejs
 
-# Copy built application
-# Server build output is in dist/
-# Frontend build output is in dist/public/
+# Copiar apenas os arquivos necessários para produção
 COPY --from=builder /app/dist ./dist
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
 
-# Set proper permissions
-RUN chown -R nextjs:nodejs /app
-USER nextjs
+# Criar package.json mínimo para produção
+RUN echo '{"name":"complex-function-visualizer","version":"1.0.0","type":"commonjs"}' > package.json
+
+# Instalar apenas express e dependências essenciais
+RUN npm install express --save --production && npm cache clean --force
+
+# Definir permissões
+RUN chown -R nodejs:nodejs /app
+USER nodejs
 
 EXPOSE 5013
 
-# Health check
+# Health check para EasyPanel
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:5013/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))" || exit 1
+  CMD curl -f http://localhost:5013/api/health || exit 1
 
-CMD ["npm", "start"]
+# Comando final - usar servidor CommonJS
+CMD ["node", "dist/server.cjs"]

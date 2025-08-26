@@ -1,16 +1,16 @@
 #!/bin/bash
 set -e
 
-echo "🚀 EasyPanel Deployment Build Script"
-echo "======================================"
+echo "🚀 EasyPanel Deployment Build Script - VERSÃO FINAL"
+echo "===================================================="
 
 # Limpar builds anteriores
 echo "🧹 Cleaning previous builds..."
 rm -rf dist/
 
-# Build frontend com config de produção (sem plugins problemáticos)
+# Build frontend com config padrão (plugins desabilitados via REPL_ID)
 echo "📦 Building frontend for production..."
-NODE_ENV=production REPL_ID="" npx vite build --config vite.config.production.ts
+NODE_ENV=production REPL_ID="" npx vite build
 
 # Verificar se build frontend funcionou
 if [ ! -f "dist/public/index.html" ]; then
@@ -20,7 +20,7 @@ fi
 
 # Copiar servidor CommonJS para produção
 echo "🔧 Setting up production server..."
-cp server-production.cjs dist/server.cjs
+cp server-production.js dist/server.cjs
 
 # Verificar se servidor foi copiado
 if [ ! -f "dist/server.cjs" ]; then
