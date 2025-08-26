@@ -31,6 +31,7 @@ interface AppStore extends VisualizationState {
   setColoringOptions: (options: Partial<ColoringOptions>) => void;
   setShowGrid: (show: boolean) => void;
   setAnimationSpeed: (speed: number) => void;
+  animationSpeed: number;
   setIsAnimating: (animating: boolean) => void;
   setMousePosition: (position: Complex | null) => void;
   setSelectedTab: (tab: 'domain-coloring' | '3d-surface' | 'split-view') => void;

@@ -233,32 +233,7 @@ export default function Home() {
                             </div>
                           </div>
                           <div className="h-[calc(100%-48px)] relative min-h-[350px]">
-                            {currentFunction instanceof QuadraticFunction ? (
-                              <div className="w-full h-full bg-background rounded">
-                                <div className="w-full h-full">
-                                  {/* Plotly 3D visualization would go here */}
-                                  <div className="flex items-center justify-center h-full">
-                                    <div className="text-center">
-                                      <i className="fas fa-cube text-4xl text-primary mb-3"></i>
-                                      <h4 className="font-medium text-foreground mb-2">Vista de superfície 3D</h4>
-                                      <p className="text-sm text-muted-foreground">
-                                        Função: {currentFunction.toString()}
-                                      </p>
-                                      <div className="mt-3 text-xs text-muted-foreground">
-                                        Intervalo: [{bounds.xMin}, {bounds.xMax}] × [{bounds.yMin}, {bounds.yMax}]
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex items-center justify-center h-full bg-muted/20 rounded">
-                                <div className="text-center p-4">
-                                  <i className="fas fa-exclamation-circle text-2xl text-muted-foreground mb-2"></i>
-                                  <p className="text-xs text-muted-foreground">3D disponível apenas para funções quadráticas</p>
-                                </div>
-                              </div>
-                            )}
+                            <ThreeDVisualization />
                           </div>
                         </div>
                       </div>

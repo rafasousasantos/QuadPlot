@@ -17,7 +17,9 @@ export function DomainColoringCanvas() {
     resetView,
     pan,
     isAnimating,
-    setIsAnimating
+    setIsAnimating,
+    animationSpeed,
+    setAnimationSpeed
   } = useAppStore();
 
   const [isDragging, setIsDragging] = React.useState(false);
@@ -162,6 +164,46 @@ export function DomainColoringCanvas() {
           >
             <i className={`fas ${isAnimating ? 'fa-stop' : 'fa-play'}`}></i>
           </button>
+          {isAnimating && (
+            <div className="flex space-x-1">
+              <button 
+                onClick={() => setAnimationSpeed(0.5)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  animationSpeed === 0.5 
+                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background'
+                }`}
+                title="Speed 0.5x"
+                data-testid="button-speed-0.5"
+              >
+                0.5x
+              </button>
+              <button 
+                onClick={() => setAnimationSpeed(1)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  animationSpeed === 1 
+                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background'
+                }`}
+                title="Speed 1x"
+                data-testid="button-speed-1"
+              >
+                1x
+              </button>
+              <button 
+                onClick={() => setAnimationSpeed(2)}
+                className={`px-2 py-1 text-xs rounded transition-colors ${
+                  animationSpeed === 2 
+                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-background'
+                }`}
+                title="Speed 2x"
+                data-testid="button-speed-2"
+              >
+                2x
+              </button>
+            </div>
+          )}
         </div>
       </div>
       
