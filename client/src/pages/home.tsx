@@ -98,14 +98,21 @@ export default function Home() {
                     </TabsContent>
                     
                     <TabsContent value="split-view" className="mt-0">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="h-48">
-                          <DomainColoringCanvas />
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <h3 className="text-sm font-medium text-muted-foreground flex items-center">
+                            <i className="fas fa-palette mr-2"></i>Domain Coloring
+                          </h3>
+                          <div className="h-80">
+                            <DomainColoringCanvas />
+                          </div>
                         </div>
-                        <div className="h-48 bg-muted rounded-lg flex items-center justify-center">
-                          <div className="text-center">
-                            <i className="fas fa-cube text-3xl text-primary mb-2"></i>
-                            <p className="text-sm text-muted-foreground">3D Surface</p>
+                        <div className="space-y-2">
+                          <h3 className="text-sm font-medium text-muted-foreground flex items-center">
+                            <i className="fas fa-cube mr-2"></i>3D Surface
+                          </h3>
+                          <div className="h-80">
+                            <ThreeDVisualization />
                           </div>
                         </div>
                       </div>
@@ -121,7 +128,7 @@ export default function Home() {
           {/* Right Sidebar */}
           <div className="lg:col-span-3 space-y-6">
             <FunctionProperties />
-            <ThreeDVisualization />
+            {selectedTab !== 'split-view' && <ThreeDVisualization />}
             <AnalysisTools />
           </div>
         </div>
